@@ -22,6 +22,7 @@ Future bottunSheet({
     builder: (ctx) => SingleChildScrollView(
       child: Container(
         width: double.infinity,
+        color: Theme.of(context).colorScheme.secondary,
         padding: EdgeInsets.all(30),
         child: Column(
           children: [
@@ -98,40 +99,66 @@ Future bottunSheet({
                       ),
                     )),
             Container(
-                margin: EdgeInsets.all(4),
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(40),
-                  color: Color.fromARGB(220, 7, 86, 152),
-                  border: Border.all(),
-                ),
-                child: TextButton(
-                  onPressed: () async {
-                    await bookingController.makeBooking(
-                      amount: double.parse(bookingController.amount.value),
-                      hotelId: int.parse(bookingController.hotel_id.value),
-                      roomId: int.parse(bookingController.room_id.value),
-                      checkInDate: bookingController.check_in_date.value,
-                      checkOutDate: bookingController.check_out_date.value,
-                      roomsBooked: bookingController.counters.value,
-                      context: context,
-                    );
-
-                    // await bookingController.makeBooking(
-                    //   amount: 500,
-                    //   hotelId: int.parse(bookingController.hotel_id.value),
-                    //   roomId: int.parse(bookingController.room_id.value),
-                    //   checkInDate: bookingController.check_in_date.value,
-                    //   checkOutDate: bookingController.check_out_date.value,
-                    //   roomsBooked: bookingController.counters.value,
-                    //   context: context,
-                    // );
-                  },
-                  child: Text(
-                    "Continue",
-                    style: TextStyle(color: Colors.white),
+              margin: EdgeInsets.all(4),
+              width: double.infinity,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(40),
+              ),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(40),
+                    side: BorderSide(),
                   ),
-                )),
+                  padding: EdgeInsets.symmetric(vertical: 15),
+                ),
+                onPressed: () async {
+                  double parsedAmount =
+                      double.parse(bookingController.amount.value);
+
+                  print("bookingController.check_in_date.value,");
+                  print(bookingController.check_in_date.value);
+                  print("bookingController.check_out_date.value");
+                  print(bookingController.check_out_date.value);
+                  print("bookingController.hotel_id");
+                  print(bookingController.hotel_id);
+                  print(bookingController.room_id.value);
+                  print("parsedAmount");
+                  print(parsedAmount);
+
+                  for (var element in bookingController.extraServices.toList()) {
+                    print("element booooooking    ");
+                    print(element);
+                    
+                  }
+                  Navigator.pop(context);
+                  await bookingController.makeBooking(
+                    amount: parsedAmount,
+                    hotelId: int.parse(bookingController.hotel_id.value),
+                    roomId: int.parse(bookingController.room_id.value),
+                    checkInDate: bookingController.check_in_date.value,
+                    checkOutDate: bookingController.check_out_date.value,
+                    roomsBooked: bookingController.counters.value,
+                    context: context,
+                    extraServices: bookingController.extraServices.toList(),
+                  );
+
+                  // await bookingController.makeBooking(
+                  //   amount: 500,
+                  //   hotelId: int.parse(bookingController.hotel_id.value),
+                  //   roomId: int.parse(bookingController.room_id.value),
+                  //   checkInDate: bookingController.check_in_date.value,
+                  //   checkOutDate: bookingController.check_out_date.value,
+                  //   roomsBooked: bookingController.counters.value,
+                  //   context: context,
+                  // );
+                },
+                child: Text(
+                  "Continue".tr,
+                  style: TextStyle(fontSize: 16),
+                ),
+              ),
+            )
           ],
         ),
       ),

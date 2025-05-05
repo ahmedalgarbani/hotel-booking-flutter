@@ -6,11 +6,11 @@ import '../services/show_hotel_services.dart';
 class SearchHotelController extends GetxController {
   var hotels = <HotelsModel>[].obs;
   var isLoading = false.obs;
-  var countersroom = 0.obs; 
-  var counterQuest = 0.obs; 
+  var countersroom = 0.obs;
+  var counterQuest = 0.obs;
   var check_out_date = "".obs;
   var check_in_date = "".obs;
-
+  var category_type = "".obs;
 
   final TextEditingController nameController = TextEditingController();
   final TextEditingController locationController = TextEditingController();
@@ -32,40 +32,46 @@ class SearchHotelController extends GetxController {
     if (counterQuest > 1) counterQuest--;
   }
 
-void prinsearch(){
-   print("countersroom");
-   print(countersroom);
-  print("counterQuest");
-  print(counterQuest);
-  print("check_in_date");
-  print(check_in_date);
-  print("check_out_date");
-  print(check_out_date);
-  print("locationController");
-  print(locationController.text);
-  print("nameController");
-  print(nameController.text);
-}
+  void prinsearch() {
+    print("countersroom");
+    print("category_type");
+    print(category_type);
+    print(countersroom);
+    print("counterQuest");
+    print(counterQuest);
+    print("check_in_date");
+    print(check_in_date);
+    print("check_out_date");
+    print(check_out_date);
+    print("locationController");
+    print(locationController.text);
+    print("nameController");
+    print(nameController.text);
+  }
 
-    Future<void> searchHotelss() async {
- print("countersroom");
-   print(countersroom);
-  print("counterQuest");
-  print(counterQuest);
-  print("check_in_date");
-  print(check_in_date);
-  print("check_out_date");
-  print(check_out_date);
-  print("locationController");
-  print(locationController.text);
-  print("nameController");
-  print(nameController.text);
+  Future<void> searchHotelss() async {
+    print("countersroom");
+    print(countersroom);
+    print("counterQuest");
+    print(counterQuest);
+    print("check_in_date");
+    print(check_in_date);
+    print("check_out_date");
+    print(check_out_date);
+    print("locationController");
+    print(locationController.text);
+    print("nameController");
+    print(nameController.text);
     try {
       isLoading.value = true;
       hotels.value = await GetAllHotelsSearch().getAllHotels(
         nameHotelSearch: nameController.text,
         locationHotelSearch: locationController.text,
-        adult_number: counterQuest.value, room_number: countersroom.value, check_in: check_in_date.value, check_out: check_out_date.value,
+        adult_number: counterQuest.value,
+        room_number: countersroom.value,
+        check_in: check_in_date.value,
+        check_out: check_out_date.value,
+        category_type: category_type.toString(),
       );
     } catch (e) {
       print(" Error during search: $e");
@@ -74,19 +80,18 @@ void prinsearch(){
     }
   }
 
-
-
-
-
-   Future<void> selectSearchDateRange(BuildContext context) async {
+  Future<void> selectSearchDateRange(BuildContext context) async {
     isLoading.value = true;
     isLoading.value = false;
- 
 
     final DateTimeRange? pickedDateRange = await showDateRangePicker(
       context: context,
       barrierColor: Color.fromRGBO(21, 37, 65, 1),
-      firstDate: DateTime(2025, 1, 1),
+      firstDate: DateTime(
+        DateTime.now().year,
+        DateTime.now().month,
+        DateTime.now().day,
+      ),
       lastDate: DateTime(2026, 1, 1),
       currentDate: DateTime.now(),
       saveText: 'Save',
@@ -117,9 +122,4 @@ void prinsearch(){
           "${pickedDateRange.end.year}-${pickedDateRange.end.month.toString().padLeft(2, '0')}-${pickedDateRange.end.day.toString().padLeft(2, '0')}";
     }
   }
-
-
-
-
-  
 }

@@ -137,16 +137,21 @@ Widget roomImage(
     required String default_capacity,
     required double base_price,
     required modelRoomm room,
+    required    HotelsModel hotel,
+
     required final int id,
     required final int indexhotel,
     required final int roomindex,
     required BuildContext context}) {
-final ConfirmController bookingController = Get.find<ConfirmController>();
+  final ConfirmController bookingController = Get.find<ConfirmController>();
 
   return InkWell(
     onTap: () {
       // bookingController.fetchHotelRoomName(
       //     hotelname: hotelname, roomName: room.name);
+      bookingController.amount.value=base_price.toString();
+      bookingController.hotel_id.value=hotel.id.toString();
+      bookingController.room_id.value=room.id.toString();
       Navigator.push(
           context,
           MaterialPageRoute(
@@ -155,7 +160,7 @@ final ConfirmController bookingController = Get.find<ConfirmController>();
               indexhotel: indexhotel,
               roomindex: roomindex,
               id: id,
-              room_id: room.id,
+              room_id: room.id, hotel: hotel,
             ),
           ));
     },
@@ -165,7 +170,7 @@ final ConfirmController bookingController = Get.find<ConfirmController>();
           margin: const EdgeInsets.only(left: 10, right: 20, bottom: 10),
           padding: const EdgeInsets.all(16.0),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Theme.of(context).colorScheme.secondary,
             borderRadius: BorderRadius.circular(16.0),
             boxShadow: [
               BoxShadow(
@@ -185,6 +190,8 @@ final ConfirmController bookingController = Get.find<ConfirmController>();
                     height: 100,
                     width: 100,
                     fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) =>
+                        Icon(Icons.broken_image),
                   )),
               const SizedBox(width: 16.0),
               Expanded(

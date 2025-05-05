@@ -1,14 +1,18 @@
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:hotels/GTX/Models/list.dart';
-import 'package:hotels/GTX/Models/show_hotel_model.dart';
+import 'package:hotels/GTX/Models/rigetermodel.dart';
 import 'package:hotels/GTX/controller/Booking_details_Controller.dart';
+import 'package:hotels/GTX/controller/ChangePasswordController.dart';
 import 'package:hotels/GTX/controller/Controller_favourites.dart';
+import 'package:hotels/GTX/controller/NotificationsController.dart';
 import 'package:hotels/GTX/controller/PaymentController.dart';
 import 'package:hotels/GTX/controller/Register_Controll.dart';
+import 'package:hotels/GTX/controller/ThemeController.dart';
+import 'package:hotels/GTX/controller/categoriesController.dart';
 import 'package:hotels/GTX/controller/confirm_Contlloer.dart';
+import 'package:hotels/GTX/controller/connection_controller.dart';
 import 'package:hotels/GTX/controller/counter_Controller.dart';
 import 'package:hotels/GTX/controller/deleteFavouritesController.dart';
 import 'package:hotels/GTX/controller/gotherAllvaraiblepay_controller.dart';
@@ -17,14 +21,19 @@ import 'package:hotels/GTX/controller/hotelinf.dart';
 import 'package:hotels/GTX/controller/login_controller.dart';
 import 'package:hotels/GTX/controller/paymentOption_Cotroller.dart';
 import 'package:hotels/GTX/controller/search_controller.dart';
+import 'package:hotels/GTX/controller/showProfileinfo.dart';
+import 'package:hotels/GTX/controller/updateprofilecontroller.dart';
 import 'package:hotels/GTX/services/getBookinService.dart';
-import 'package:hotels/GTX/views/screens/exchange.dart';
+import 'package:hotels/GTX/thems.dart';
 import 'package:hotels/GTX/views/screens/mainpagescreens/homepage.dart';
-import 'package:hotels/GTX/views/widgets/registers/mainregisre.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:device_preview/device_preview.dart';
+import 'package:hotels/GTX/views/screens/mybookingscreen/bookingscreen.dart';
+import 'package:hotels/GTX/views/widgets/ConnectionCheckWidget/ConnectionCheckWidget.dart';
+import 'package:hotels/GTX/views/widgets/registers/AuthSelectionScreen.dart';
 
-void main() {
+import 'package:hotels/Translate/app_translations.dart';
+
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   runApp(
     MyApp(),
@@ -42,10 +51,13 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
+    ThemeMode _themeMode = ThemeMode.system; // متغير داخل Controller مثلاً أو في State
+ final Rigetermodel user;
+
+
+
     Get.put(BookingController());
     Get.put(HotelsController());
-
     Get.put(ConfirmController());
     Get.put(PaymentController());
     Get.put(RegistrationController());
@@ -53,40 +65,54 @@ class MyApp extends StatelessWidget {
     Get.put(CounterController());
     Get.put(ListControle());
     Get.put(SearchHotelController());
-
     Get.put(getBookingService());
-
     Get.put(FavouritesController());
     Get.put(PaymentOptionController());
     Get.put(SignupController());
-    Get.put(Deletefavouritescontroller());
     Get.put(GotherallvaraiblepayController());
+    Get.put(Categoriescontroller());
+    Get.put(Updateprofilecontroller());
+    Get.put(Showprofileinfo());
+    Get.put(ChangePasswordController());
+    // Get.put(NetworkController());
+    Get.put(NotificationsController());
+   final themeController= Get.put(ThemeController());
+       final NetworkController connectivityController = Get.put(NetworkController());
 
-    return GetMaterialApp(
-      // builder: DevicePreview.appBuilder, // دمج المعاينة
-      // locale: DevicePreview.locale(context),
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        bottomNavigationBarTheme: BottomNavigationBarThemeData(
-          backgroundColor: Colors.white,
-          selectedItemColor: const Color.fromARGB(255, 131, 31, 51),
-          unselectedItemColor: Colors.white,
-        ),
-        scaffoldBackgroundColor: Colors.white,
-        // cardColor: Colors.blue,
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: Homepage(),
-      routes: {
-        // "/dashboard": (context) => Dashboard(),  // الصفحة الرئيسية بعد تسجيل الدخول
-        // "/login": (context) => SignupScreen(),  // صفحة تسجيل الدخول
-        "/login": (context) =>
-            LoginScreen(), // أي صفحة أخرى تريد تحويل المستخدم إليها
-      },
+
+
+    return Obx(() => GetMaterialApp(
+  debugShowCheckedModeBanner: false,
+  theme: lightMode,
+  darkTheme: darkMode,
+  themeMode: themeController.themeMode.value,
+  translations: AppTranslations(),
+  locale: const Locale('ar', 'SA'),
+  fallbackLocale: const Locale('en', 'US'),
+  home: Homepage(), 
+  builder: (context, child) {
+    return Stack(
+      children: [
+        child!,
+        Obx(() {
+          if (!connectivityController.isConnected.value) {
+            return ConnectionCheckWidget(); 
+          }
+          return const SizedBox.shrink();
+        }),
+      ],
     );
+  },
+  routes: {
+    "/login": (context) => AuthSelectionScreen(),
+    "/bookings": (context) => Bookingscreen(),
+    "/homepage": (context) => Homepage(),
+  },
+));
+
   }
 }
+
 
 
 

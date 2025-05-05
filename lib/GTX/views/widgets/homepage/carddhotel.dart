@@ -1,9 +1,11 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:hotels/GTX/Models/show_hotel_model.dart';
 import 'package:hotels/GTX/controller/hotelinf.dart';
 import 'package:hotels/GTX/views/screens/homescreendetails/detailshomescreen.dart';
+import 'package:hotels/GTX/views/showAllHotels/showAllhotels.dart';
 
 // required String hotelName,
 //   required String location,
@@ -27,13 +29,12 @@ Widget cardHotel({
       print("indexhotellllhom");
       print("indexhotellllhom");
       print("indexhotellllhom");
-      
+
       print(indexhotel);
       Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => Detailshomescreen(
-            indexhotel: indexhotel,
             hotel: hotel,
             id: hotel.id,
           ),
@@ -50,7 +51,7 @@ Widget cardHotel({
           ),
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
-              color: Colors.white,
+              color: Theme.of(context).colorScheme.secondary,
               boxShadow: [
                 BoxShadow(
                     offset: Offset(1, 1),
@@ -64,20 +65,22 @@ Widget cardHotel({
             children: [
               Stack(
                 children: [
-                  Container(
-                    margin: EdgeInsets.all(5),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: hotel.image.isNotEmpty
-                          ? Image.network(
-                              hotel.image,
-                              height: 150,
-                              width: 180,
-                              fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) =>
-                                  Icon(Icons.broken_image),
-                            )
-                          : Text("Connect the internet to load"),
+                  Expanded(
+                    child: Container(
+                      margin: EdgeInsets.all(5),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: hotel.image.isNotEmpty
+                            ? Image.network(
+                                hotel.image,
+                                height: 150,
+                                width: 180,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) =>
+                                    Icon(Icons.broken_image),
+                              )
+                            : Text("Connect the internet to load"),
+                      ),
                     ),
                   ),
                   Positioned(
@@ -95,14 +98,16 @@ Widget cardHotel({
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(80),
                           border: Border.all(
-                            color: Color.fromARGB(239, 7, 86, 152),
+                            color: Color.fromARGB(255, 39, 63, 70),
                             width: 2,
                           ),
                         ),
                         child: Center(
                           child: Icon(
                             isFavorite ? Icons.favorite : Icons.favorite_border,
-                color: isFavorite ? Color.fromARGB(239, 7, 86, 152) : Colors.grey,
+                            color: isFavorite
+                                ? Color.fromARGB(255, 39, 63, 70)
+                                : Colors.grey,
                           ),
                         ),
                       ),
@@ -117,14 +122,14 @@ Widget cardHotel({
                   children: [
                     Row(
                       children: [
-                        
                         Text(
-                          "hotelName : ",
+                          "hotelName : ".tr,
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         Text(
                           hotel.name,
-                          style: TextStyle(fontWeight: FontWeight.bold,color: Colors.grey),
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold),
                         ),
                       ],
                     ),
@@ -132,19 +137,27 @@ Widget cardHotel({
                       children: [
                         Icon(Icons.location_on, size: 16, color: Colors.grey),
                         SizedBox(width: 4),
+                        // Text(
+                        //   hotel.location,
+                        //   style: TextStyle(),
+                        //   overflow: TextOverflow.ellipsis,
+                        // ),
                         Text(
-                          hotel.location,
-                          style: TextStyle(),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        
+                          hotel.location.split(' ').take(4).join(' ') +
+                              '...',
+                          style: TextStyle(fontWeight:  FontWeight.bold)
+                          )
                       ],
                     ),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("Description : "),
-                        Text(hotel.description ,style: TextStyle(color: Colors.grey,fontWeight: FontWeight.bold),),
+                        Text('Description :'.tr),
+                        Text(
+                          hotel.description.split(' ').take(4).join(' ') +
+                              '...',
+                         style: TextStyle(fontWeight:  FontWeight.bold)
+                        ),
                       ],
                     )
                   ],
@@ -158,23 +171,35 @@ Widget cardHotel({
   );
 }
 
-Widget titleCard() {
+
+Widget titleCard({
+  required BuildContext context,
+  required String titleText,
+  required String seeAllText,
+  required Widget navigateToPage,
+}) {
   return Container(
-    margin: EdgeInsets.only(left: 10, right: 10, top: 11),
-    child: const Row(
+    margin: const EdgeInsets.only(left: 10, right: 10, top: 11),
+    child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
-          "Popular Hotel",
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+          titleText.tr, 
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
         ),
-        Text(
-          "See All",
-          style: TextStyle(
-            color: Colors.grey,
-          ),
-        ),
+        TextButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => navigateToPage,
+              ),
+            );
+          },
+          child: Text(seeAllText.tr),
+        )
       ],
     ),
   );
 }
+

@@ -3,13 +3,19 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:hotels/GTX/Models/login_Model.dart';
 import 'package:hotels/GTX/controller/Booking_details_Controller.dart';
 import 'package:hotels/GTX/controller/Controller_favourites.dart';
+import 'package:hotels/GTX/controller/categoriesController.dart';
+import 'package:hotels/GTX/controller/hotelLocation_Controller.dart';
+import 'package:hotels/GTX/controller/hotelinf.dart';
+import 'package:hotels/GTX/controller/showProfileinfo.dart';
 import 'package:hotels/GTX/helper/api.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginService {
  Future<Login?> loginUser({required String email, required String password}) async {
+
+  
   Map<String, dynamic>? data = await Api().post(
-    url: 'http://192.168.183.85:8000/api/login/',
+    url: 'http://192.168.60.85:8000/api/login/',
     body: {'email': email, 'password': password},
   );
 
@@ -25,6 +31,9 @@ class LoginService {
 
      Get.find<FavouritesController>().fetchFavourites();
      Get.find<BookingController>().fetchBookings();
+     Get.find<Showprofileinfo>().fetchAllUser();
+     
+     
 
     return Login.fromJson(data['user']);
   }

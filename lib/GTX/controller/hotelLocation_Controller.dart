@@ -29,21 +29,25 @@ class HotelsController extends GetxController {
       errorMessage.value = '';
 
       String city = await LocationService().getCurrentCity();
-      city = cleanCity(city); 
+      city = cleanCity(city);
 
-      // if (city.isEmpty || city == "غير معروف") {
-      //   errorMessage.value = "لم يتم تحديد المدينة بشكل صحيح";
-      // } else {
-      //   print(" المدينة المحددة: $city");
-      // }
-
+      if (city.isEmpty || city == "غير معروف") {
+        errorMessage.value = "لم يتم تحديد المدينة بشكل صحيح";
+      } else {
+        print(" المدينة المحددة: $city");
+      }
+     
       List<HotelsModel> hotels = await GetAllHotelsSearch().getAllHotels(
         nameHotelSearch: "",
         locationHotelSearch: city,
-        adult_number: 0, room_number: 0, check_in: '', check_out: '',
+        adult_number: 0,
+        room_number: 0,
+        check_in: '',
+        check_out: '',
+        category_type: '',
       );
 
-      print("Fetched hotels: $hotels");
+      print("Fetched hotels location: $hotels");
       hotelsList.value = hotels;
 
       if (hotels.isEmpty) {
@@ -57,4 +61,3 @@ class HotelsController extends GetxController {
     }
   }
 }
-

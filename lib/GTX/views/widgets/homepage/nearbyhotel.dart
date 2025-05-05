@@ -1,82 +1,105 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:hotels/GTX/Models/show_hotel_model.dart';
+import 'package:hotels/GTX/views/screens/homescreendetails/detailshomescreen.dart';
+import 'package:hotels/GTX/views/screens/nearbyhotelscreen/NearbyHotelsScreen%20.dart';
 
 Widget hotelCard(
-    {required String image, required String name, required String date}) {
-  return Column(
-    children: [
+    {required BuildContext context,
+    required String image,
+    required String name,
+    required HotelsModel hotel,
+    required int id,
     
-      Container(
-        width: double.infinity,
-        height: 105,
-        margin: EdgeInsets.only(
-          left: 10,
-          top: 5,
-          right: 10,
+    required String hotelLocation}) {
+  return Card(
+    color: Theme.of(context).colorScheme.secondary,
+    margin: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+    elevation: 4,
+    child: Row(
+      children: [
+        Container(
+          margin: EdgeInsets.all(10),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(10),
+            child: Image.network(
+              image,
+              width: 120,
+              height: 120,
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) =>
+                  Icon(Icons.broken_image),
+            ),
+          ),
         ),
-        decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(5),
-            boxShadow: [
-              BoxShadow(
-                offset: Offset(1, 1),
-                blurRadius: 2,
-                spreadRadius: 1,
-                color: Colors.grey,
-                blurStyle: BlurStyle.solid,
-              )
-            ]),
-        child: 
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            Expanded(child: Container(
-              
-                  margin: EdgeInsets.only(left: 5, top: 2, bottom: 2),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(5),
-                    child: Image.network(
-                      image,
-                      width: 100,
-                      height: 100,
-                      fit: BoxFit.cover,
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(name,
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    )),
+                SizedBox(height: 4),
+                Row(
+                  children: [
+                    Icon(Icons.location_on, size: 16, color: Colors.grey),
+                    SizedBox(width: 4),
+                    Text(
+                      hotelLocation,
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 4),
+                Row(
+                  children: List.generate(
+                    5,
+                    (index) => Icon(
+                      index < 1 ? Icons.star : Icons.star_border,
+                      size: 16,
+                      color: Colors.amber,
                     ),
                   ),
-                )
                 ),
-            Expanded(child: Container(
-              margin: EdgeInsets.all(5),
-              child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              
-                children: [
-                  Text(name),
-                  Row(children: [ 
-                    Icon(Icons.location_on,color: Colors.grey,size: 15,),
-                    Text(date,style: TextStyle(color:Colors.grey),),
-
-                  ],),
-                  
-                ],
-              ),
-            )),
-            Expanded(child:Container(
-              margin: EdgeInsets.only(left: 30,top: 5),
-              child: Column(
-                children: [Text(r"$200"),],
-              )
-            ) )
-            
-           
-          ],
+                SizedBox(height: 8),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "price",
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        Get.to(
+                          Detailshomescreen(
+                            
+                            hotel: hotel,
+                            id: hotel.id,
+                          ),
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(),
+                      child: Text("احجز الآن"),
+                    )
+                  ],
+                ),
+              ],
+            ),
+          ),
         ),
-      ),
-     
-    ],
+      ],
+    ),
   );
 }
 
-
-Widget titleNearby() {
+Widget titleNearby({required BuildContext context}) {
   return Container(
     margin: EdgeInsets.only(left: 10, right: 10),
     alignment: Alignment.bottomLeft,
@@ -84,13 +107,23 @@ Widget titleNearby() {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
-          "Near By Hotel",
+          "Near By Hotel :".tr,
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
         ),
-        Text(
-          "See All",
+        TextButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => NearbyHotelsScreen(),
+                ),
+              );
+            }, child: Text(
+          "See All :".tr,
           style: TextStyle(color: Colors.grey),
         ),
+        ),
+        
       ],
     ),
   );

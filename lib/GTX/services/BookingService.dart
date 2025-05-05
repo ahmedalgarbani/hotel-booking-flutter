@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:hotels/GTX/Models/BookingModel.dart';
 import 'package:hotels/GTX/helper/api.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -12,35 +14,40 @@ class BookingService {
     required String checkOutDate,
     required double amount,
     required int roomsBooked,
+    required List<int> extraServices,
   }) async {
+   
+
     final prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('access_token');
 
+    print("tokentokentoken lennnnnnghjjjjjjjjjjj $token");
+    print("extraServices lennnnnnghjjjjjjjjjjj");
+    for (var element in extraServices) {
+      print(element);
+      
+    }
+
     Map<String, dynamic>? data = await Api().postBooking(
-      url: 'http://192.168.183.85:8000/api/bookings/create_booking/',
+      url: 'http://192.168.60.85:8000/api/bookings/create_booking/',
       body: {
         'hotel_id': hotelId,
         'room_id': roomId,
         'check_in_date': checkInDate,
         'check_out_date': checkOutDate,
-        'amount': amount,
+        // 'amount': amount,
         'rooms_booked': roomsBooked,
+        "extra_services": extraServices,
+       
       },
       token: token,
     );
-             
-
-  
 
     if (data != null) {
-    var bookingId = data['id'];
-    print("Booking ID: $bookingId");
-  }
-print("token Booking  ");
+      var bookingId = data['id'];
+      print("Booking ID: $bookingId");
+    }
+    print("token Booking  ");
     return data;
   }
 }
-
-
-
-

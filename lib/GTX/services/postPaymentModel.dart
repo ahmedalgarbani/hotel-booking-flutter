@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:hotels/GTX/Models/PaymentModel.dart';
 import 'package:hotels/GTX/helper/api.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -16,6 +18,7 @@ class Postpaymentmodel {
     required String paymentDiscount,
     required int paymentStatus,
   }) async {
+    
     final prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('access_token');
 
@@ -33,7 +36,7 @@ class Postpaymentmodel {
     };
 
     Map<String, dynamic> data = await Api().postMultipart(
-      url: 'http://192.168.183.85:8000/api/payment/make_payment/',
+      url: 'http://192.168.60.85:8000/api/payment/make_payment/',
       body: bodys,
       imageFile: transferImage,
       token: token,
@@ -64,7 +67,7 @@ class Postpaymentmodel {
 //   String? token = prefs.getString('access_token');
 
 //    Map<String, dynamic>? data = await Api().postPayment(
-//     url: 'http://192.168.183.85:8000/api/payment/make_payment/',
+//     url: 'http://192.168.60.85:8000/api/payment/make_payment/',
 //     token: token,
 //     bookingId: bookingId,
 //     paymentMethodId: paymentMethodId,

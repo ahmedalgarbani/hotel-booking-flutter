@@ -9,6 +9,7 @@ import 'package:hotels/GTX/controller/Controller_favourites.dart';
 import 'package:hotels/GTX/controller/confirm_Contlloer.dart';
 import 'package:hotels/GTX/controller/flashbar.dart';
 import 'package:hotels/GTX/services/favourites_service.dart';
+import 'package:hotels/GTX/services/getAllCategories.dart';
 import 'package:hotels/GTX/services/show_hotel_services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -47,28 +48,28 @@ class Hotelinf extends GetxController {
 class Hotelinfo extends GetxController {
   var hotelsList = <HotelsModel>[].obs;
   var hotelroom = <modelRoomm>[].obs;
-   var hotel_name = "".obs;
+  var hotel_name = "".obs;
   var image_hotel = "".obs;
   var room_name = "".obs;
   var hotelroomService = <modelServiceModel>[].obs;
+  var selectedExtraServices = <int>[].obs;
   var hotelroomimage = <modelRoomImagee>[].obs;
   var isFetching = false.obs;
   var isFavorite = false.obs;
 
- void toggleFavorite() {
-    isFavorite.value = !isFavorite.value;  
+  void toggleFavorite() {
+    isFavorite.value = !isFavorite.value;
   }
-
 
   @override
   void onInit() {
     super.onInit();
     toggleFavorite();
-        fetchHotels(); 
+    fetchHotels();
 
-  //    Timer.periodic(Duration(seconds: 1), (timer) {
-  //   fetchHotels(); 
-  // });
+    //    Timer.periodic(Duration(seconds: 1), (timer) {
+    //   fetchHotels();
+    // });
   }
 
   void fetchHotels() async {
@@ -85,38 +86,40 @@ class Hotelinfo extends GetxController {
     }
     update();
   }
+
 // final ConfirmController bookingController = Get.find<ConfirmController>();
   void loadHotelRoomsById(int hotelId) {
     final hotel = hotelsList.firstWhereOrNull((h) => h.id == hotelId);
 
     if (hotel != null) {
-    hotel_name.value=  hotel.name;
-    image_hotel.value=  hotel.image;
+      hotel_name.value = hotel.name;
+      image_hotel.value = hotel.image;
       hotelroom.value = hotel.rooms;
       print("hotel_namehotel_namehotel_namehotel_namehotel_name");
       print("hotel_name");
       print("hotel_name");
       print(hotel_name);
     } else {
-      hotelroom.clear(); 
+      hotelroom.clear();
     }
   }
+
   void loadHotelRoomsServiceById(int room_id) {
     final rooms = hotelroom.firstWhereOrNull((h) => h.id == room_id);
     if (rooms != null) {
-          room_name.value=rooms.name;
-
+      room_name.value = rooms.name;
       hotelroomService.value = rooms.services;
     } else {
-      hotelroomService.clear(); 
+      hotelroomService.clear();
     }
   }
+
   void loadHotelRoomsImageById(int room_id) {
     final rooms = hotelroom.firstWhereOrNull((h) => h.id == room_id);
     if (rooms != null) {
       hotelroomimage.value = rooms.roomImages;
     } else {
-      hotelroomimage.clear(); 
+      hotelroomimage.clear();
     }
   }
 
@@ -127,7 +130,6 @@ class Hotelinfo extends GetxController {
     prefs.setStringList('hotels', hotelJsonList);
   }
 
-  // دالة لتحميل البيانات المخزنة من SharedPreferences
   Future<List<HotelsModel>> _getHotelsLocally() async {
     final prefs = await SharedPreferences.getInstance();
     List<String>? hotelJsonList = prefs.getStringList('hotels');
@@ -139,41 +141,31 @@ class Hotelinfo extends GetxController {
       return [];
     }
   }
-
-  Future<void> favorite(int id,context) async {
+  
+  Future<void> favorite(int id, context) async {
+        for (var element in Get.find<FavouritesController>().favourites) {
+          if (id==element.id) {
+             Get.snackbar("Unsuccess", "Favourite already exists!",
+            backgroundColor: Colors.deepOrange);
+          }
+          
+        }
     try {
       bool success = await FavouritesService().addToFavourites(id);
 
       Get.find<FavouritesController>().fetchFavourites();
-
+      
+       
       if (success) {
-        showFlushbarMessage(
-          context,
-          " success ",
-          "successfull to add to favroute.",
-          Colors.red,
-        );
-      } else {
-
-         showFlushbarMessage(
-          context,
-          " Unsuccess ",
-          "Unsuccessfull to add to favroute.",
-          Colors.red,
-        );
+        Get.snackbar("successFul", "successfull to add to favroute.!",
+            backgroundColor: Colors.green);
       }
     } catch (e) {
       print(" Unsuccessfull to add to favroute call the engireening $e");
-      showFlushbarMessage(
-          context,
-          " Unsuccess ",
-          "successfull to add to favroute,communaction with  ",
-          Colors.red,
-        );
+
+      Get.snackbar(
+          "Unsuccessful", "successfull to add to favroute,communaction with!",
+          backgroundColor: Colors.red);
     }
   }
-
-
-
-  
 }

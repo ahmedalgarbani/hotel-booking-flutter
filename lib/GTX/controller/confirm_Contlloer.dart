@@ -8,13 +8,13 @@ import 'package:hotels/GTX/controller/flashbar.dart';
 import 'package:hotels/GTX/controller/hotelinf.dart';
 import 'package:hotels/GTX/services/BookingService.dart';
 import 'package:hotels/GTX/views/screens/exchange.dart';
+import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ConfirmController extends GetxController {
   final Hotelinfo hotelroomidList = Get.put(Hotelinfo());
   var isLoading = false.obs;
-
 
   final ImagePicker _picker = ImagePicker();
   var pickedimage = Rxn<File>();
@@ -94,22 +94,25 @@ class ConfirmController extends GetxController {
   var amount = "".obs;
   var check_out_date = "".obs;
   var check_in_date = "".obs;
-  var additional_fee ="0".obs;
-  var price ="0".obs;
+  var additional_fee = <double>[].obs;
+  var price = "0".obs;
+  var extraServices = <int>[].obs;
 
-  RxInt counters = 0.obs;
+  RxInt counters = 1.obs;
   RxInt counter = 0.obs;
   RxInt counterQuest = 0.obs;
+
+
 
   double get totalpriceSubtotal {
     final price = double.tryParse(amount.value) ?? 0;
     return price * counters.value;
   }
-  double get totalPrice {
 
-    final priceSubtotal = double.tryParse(additional_fee.value) ?? 0;
+  double get totalPrice {
+    final priceSubtotal = additional_fee.fold(0.0, (sum, item) => sum + item);
     final price = double.tryParse(amount.value) ?? 0;
-    return price * counters.value + priceSubtotal ;
+    return price * counters.value + priceSubtotal;
   }
 
   void increament() {
@@ -153,7 +156,11 @@ class ConfirmController extends GetxController {
     required String checkOutDate,
     required double amount,
     required int roomsBooked,
+    required List<int> extraServices,
   }) async {
+    print("extraServices.length");
+    print(extraServices.length);
+    
     if (check_in_date.value.isEmpty || check_out_date.value.isEmpty) {
       if (!Get.isSnackbarOpen) {
         showFlushbarMessage(
@@ -188,6 +195,7 @@ class ConfirmController extends GetxController {
         checkOutDate: checkOutDate.trim(),
         amount: amount,
         roomsBooked: roomsBooked,
+        extraServices: extraServices,
       );
 
       if (response != null) {
@@ -206,21 +214,23 @@ class ConfirmController extends GetxController {
         );
         bookingController.fetchBookings();
 
-        Get.to(() => ExchangeApp(indexhotel: hotelId));
-
-        check_in_date.value = "";
-        check_out_date.value = "";
+        Get.to(() => ExchangeApp(indexhotel: hotelId))?.then((result) {
+          if (result == 'back') {
+            check_in_date.value = "";
+            check_out_date.value = "";
+            counters.value = 1;
+            extraServices = <int>[];
+            if (Get.isBottomSheetOpen ?? false) {
+              Get.back();
+            }
+          }
+        });
       } else {
         throw Exception('No response from server');
       }
     } catch (e) {
-      print("❌ فشل الحجز: $e");
-      showFlushbarMessage(
-        context,
-        "Booking Failed",
-        "There was an error while making the booking.",
-        Colors.red,
-      );
+      print(" فشل الحجز: $e");
+      Get.snackbar("try ", "connect with correct ipadrees",backgroundColor: Colors.deepOrangeAccent);
     } finally {
       isLoading.value = false;
     }
@@ -229,9 +239,8 @@ class ConfirmController extends GetxController {
   Future<void> updateConfirmBooking(
       {required final int indexhotel, required final int indexroom}) async {
     isLoading.value = true;
-    hotel_id.value = hotelroomidList.hotelsList[indexhotel].id.toString();
-    room_id.value =
-        hotelroomidList.hotelsList[indexhotel].rooms[indexroom].id.toString();
+    hotel_id.value = indexhotel.toString();
+    room_id.value = indexroom.toString();
     amount.value = hotelroomidList
         .hotelsList[indexhotel].rooms[indexroom].basePrice
         .toString();
@@ -249,7 +258,11 @@ class ConfirmController extends GetxController {
     final DateTimeRange? pickedDateRange = await showDateRangePicker(
       context: context,
       barrierColor: Color.fromRGBO(21, 37, 65, 1),
-      firstDate: DateTime(2025, 1, 1),
+      firstDate: DateTime(
+        DateTime.now().year,
+        DateTime.now().month,
+        DateTime.now().day,
+      ),
       lastDate: DateTime(2026, 1, 1),
       currentDate: DateTime.now(),
       saveText: 'Save',
@@ -278,6 +291,8 @@ class ConfirmController extends GetxController {
           "${pickedDateRange.start.year}-${pickedDateRange.start.month.toString().padLeft(2, '0')}-${pickedDateRange.start.day.toString().padLeft(2, '0')} ";
       check_out_date.value =
           "${pickedDateRange.end.year}-${pickedDateRange.end.month.toString().padLeft(2, '0')}-${pickedDateRange.end.day.toString().padLeft(2, '0')}";
+      print("📅 تاريخ الدخول: '${check_in_date.value}'");
+      print("📅 تاريخ الخروج: '${check_out_date.value}'");
     }
   }
 }

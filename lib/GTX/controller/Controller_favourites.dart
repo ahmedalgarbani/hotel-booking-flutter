@@ -1,25 +1,20 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hotels/GTX/Models/favroute_model.dart';
 import 'package:hotels/GTX/controller/flashbar.dart';
 import 'package:hotels/GTX/services/favourites_service.dart';
 
-
-
 class FavouritesController extends GetxController {
   var favourites = <favrourHotelsModel>[].obs;
   var isLoading = false.obs;
   var isFavorite = false.obs;
 
-
-
-@override
+  @override
   void onInit() {
     super.onInit();
-    fetchFavourites(); 
-    
+    fetchFavourites();
   }
+
   void toggleFavorite() {
     isFavorite.value = !isFavorite.value;
   }
@@ -27,7 +22,8 @@ class FavouritesController extends GetxController {
   void fetchFavourites() async {
     try {
       isLoading.value = true;
-      List<favrourHotelsModel> favHotels = await FavouritesService().getFavourites();
+      List<favrourHotelsModel> favHotels =
+          await FavouritesService().getFavourites();
 
       for (var hotel in favHotels) {
         print(" hotel: ${hotel.name}, photo: ${hotel.image}");
@@ -41,44 +37,38 @@ class FavouritesController extends GetxController {
     }
   }
 
-  
+  Future<void> deleteFavorite(int id) async {
+    try {
+      print("delete ID: $id");
 
+      if (id == 0 || id == null) {
+        print("the id is wrong");
+        return;
+      }
+      bool? success = await FavouritesService().removeFromFavourites(id);
+       fetchFavourites();
 
-
- Future<void> deleteFavorite(int id) async {
-
-  try {
-    print("delete ID: $id");
-
-    if (id == 0 || id == null) {
-      print("the id is wrong");
-      return;
-    }
-    bool? success = await FavouritesService().removeFromFavourites(id);
-     fetchFavourites();
-
-    if (success == true) {
-      favourites.removeWhere((hotel) => hotel.id == id);
-      favourites.refresh();  
-
-      print("✅Successful");
+      if (success == true) {
+        favourites.removeWhere((hotel) => hotel.id == id);
+        favourites.refresh();
+       
+        print("Successful");
+        print("Sccessful");
+        Get.snackbar("successful", "successful Delete Hotel From Favroute!",
+            backgroundColor: Colors.green);
+            fetchFavourites();
+      } else {
+        print("wrong to delete of no hotel");
+        print("Sccessful");
+        Get.snackbar("successful", "successful Delete Hotel From Favroute!",
+            backgroundColor: Colors.green);
+      }
+    } catch (e) {
+      print("wrong when delete $e");
       ScaffoldMessenger.of(Get.context!).showSnackBar(
-        const SnackBar(content: Text("successful")),
+         SnackBar(
+            content: Text("wrong when delete communcate with engreening")),
       );
     }
-     else {
-      print("wrong to delete of no hotel");
-      ScaffoldMessenger.of(Get.context!).showSnackBar(
-        const SnackBar(content: Text("there is no hotel")),
-      );
-    }
-  } catch (e) {
-    print("wrong when delete $e");
-    ScaffoldMessenger.of(Get.context!).showSnackBar(
-      const SnackBar(content: Text("wrong when delete communcate with engreening")),
-    );
   }
-}
-
-
 }

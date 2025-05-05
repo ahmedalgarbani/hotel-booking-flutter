@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
+import 'package:hotels/GTX/Models/favroute_model.dart';
+import 'package:hotels/GTX/controller/Booking_details_Controller.dart';
 import 'package:hotels/GTX/controller/Controller_favourites.dart';
-import 'package:hotels/GTX/services/favourites_service.dart';
+import 'package:hotels/GTX/controller/connection_controller.dart';
+import 'package:hotels/GTX/views/widgets/ConnectionCheckWidget/ConnectionCheckWidget.dart';
 import 'package:hotels/GTX/views/widgets/favoritewidget/favorite.dart';
 
 class Favoritescreen extends StatefulWidget {
@@ -14,80 +15,85 @@ class Favoritescreen extends StatefulWidget {
 }
 
 class _FavoritescreenState extends State<Favoritescreen> {
+  final BookingController bookingController = Get.find<BookingController>();
+  final NetworkController connectivityController =
+      Get.find<NetworkController>();
+  final FavouritesController favController =Get.find<FavouritesController>();
+List<favrourHotelsModel> _favroutSearch = [];
+
   @override
   void initState() {
     super.initState();
+    _favroutSearch = favController.favourites;
   }
-  
 
-  @override
+  void _runfavroutSearchFilter(String enteredKeyword) {
+    List<favrourHotelsModel> results = [];
+
+    if (enteredKeyword.isEmpty) {
+      results = favController.favourites;
+    } else {
+      results = favController.favourites.where((hotel) =>
+        hotel.name.toLowerCase().contains(enteredKeyword.toLowerCase())
+      ).toList();
+    }
+
+    setState(() {
+      _favroutSearch = results;
+    });
+  }
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: false,
+      backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
-        title: const Text("My Favorite"),
-        backgroundColor: Colors.white,
+        title: Text("My Favorite".tr),
         centerTitle: true,
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
       ),
-      body: GetX<FavouritesController>(
-        init: FavouritesController(),
-        builder: (controller) => Padding(
-          padding: const EdgeInsets.all(16.0),
+      body: Obx(() {
+        final controller = Get.find<FavouritesController>();
+        return Padding(
+          padding: const EdgeInsets.all(8),
           child: Column(
             children: [
-              Container(
-                width: double.infinity,
-                margin: const EdgeInsets.only(bottom: 16),
-                decoration: BoxDecoration(
-                  color: Colors.grey[200],
-                  borderRadius: BorderRadius.circular(25),
-                ),
-                child: const TextField(
-                  decoration: InputDecoration(
-                    hintText: "Search...",
-                    border: InputBorder.none,
-                    prefixIcon: Icon(Icons.search, color: Colors.grey),
-                    suffixIcon: Icon(Icons.tune, color: Colors.grey),
-                    contentPadding: EdgeInsets.symmetric(vertical: 15),
-                  ),
-                ),
-              ),
-
-              // 🔹 عرض القائمة
+               buildSearchBar(
+        context: context,
+        onChanged: _runfavroutSearchFilter, // ← مرر الدالة هنا
+      ),
+              const SizedBox(height: 10),
               Expanded(
                 child: controller.isLoading.value
                     ? const Center(child: CircularProgressIndicator())
                     : controller.favourites.isEmpty
                         ? const Center(child: Text("لا توجد فنادق مفضلة."))
                         : GridView.builder(
-                            padding: const EdgeInsets.all(10),
-                            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                            padding: const EdgeInsets.all(8),
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
                               crossAxisCount: 2,
                               crossAxisSpacing: 10,
-                              mainAxisSpacing: 15,
-                              childAspectRatio: 0.7,
+                              mainAxisSpacing: 10,
+                              childAspectRatio: 0.65,
                             ),
-                            itemCount: controller.favourites.length,
+                            itemCount: _favroutSearch.length,
                             itemBuilder: (context, index) {
-                              var hotel = controller.favourites[index];
-
-                              debugPrint("اسم الفندق: ${hotel.name}");
-                              debugPrint("صورة الفندق: ${hotel.image}");
-                              
-
-                              return favoriteHotel(
+                              final hotel = _favroutSearch[index];
+                              return FavoriteCard(
                                 hotelName: hotel.name,
                                 imagehotel: hotel.image,
                                 location: hotel.location,
-                                deltefavorite: () => controller.deleteFavorite(hotel.id),
+                                description: hotel.description,
+                                deltefavorite: () =>
+                                    controller.deleteFavorite(hotel.id),
                               );
                             },
                           ),
               ),
             ],
           ),
-        ),
-      ),
+        );
+      }),
     );
   }
 }
-

@@ -9,11 +9,13 @@ import 'package:hotels/GTX/services/postPaymentModel.dart';
 Widget exchange(
     {required String image,
     required String namemethod,
-    required bool isSelected}) {
+    required bool isSelected,
+    required BuildContext context}) {
   return Container(
-    margin: EdgeInsets.only(left: 9),
+    margin: EdgeInsets.only(left: 9, right: 9),
     padding: EdgeInsets.all(8),
     decoration: BoxDecoration(
+      color: Theme.of(context).colorScheme.secondary,
       borderRadius: BorderRadius.circular(5),
       border: Border.all(
         color: isSelected ? Color.fromARGB(239, 7, 86, 152) : Colors.grey,
@@ -39,15 +41,16 @@ Widget exchange(
   );
 }
 
-Widget accountInfo({
-  required String iban,
-  required String description,
-  required String numberAccount,
-  required String nameAccount,
-}) {
+Widget accountInfo(
+    {required String iban,
+    required String description,
+    required String numberAccount,
+    required String nameAccount,
+    required BuildContext context}) {
   return Container(
     decoration: BoxDecoration(
       borderRadius: BorderRadius.circular(15),
+      color: Theme.of(context).colorScheme.secondary,
       gradient: LinearGradient(
         colors: [
           Colors.lightBlue.withOpacity(0.6),
@@ -93,7 +96,7 @@ Widget accountDetail(String title, String value) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      Text(title,
+      Text(title.tr,
           style: TextStyle(color: Colors.white.withOpacity(0.9), fontSize: 16)),
       Text(value,
           style: TextStyle(
@@ -104,57 +107,144 @@ Widget accountDetail(String title, String value) {
   );
 }
 
-Widget accountTextField() {
+Widget accountInfoImageAndTypePay(BuildContext context) {
+  final GotherallvaraiblepayController paymentTyoe =
+      Get.find<GotherallvaraiblepayController>();
   return GetX<ConfirmController>(
     builder: (controller) => controller.isLoading.value
-        ? CircularProgressIndicator()
+        ? Center(child: CircularProgressIndicator())
         : Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.all(10.0),
-                  child: TextField(
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'رقم الصراف',
-                      prefixIcon: Icon(Icons.money, color: Colors.green),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: Theme.of(context).colorScheme.secondary,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.2),
+                          blurRadius: 6,
+                          offset: Offset(0, 3),
+                        ),
+                      ],
+                    ),
+                    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    child: DropdownButton<String>(
+                      dropdownColor: Theme.of(context).colorScheme.background,
+                      value: paymentTyoe.paymentType.value,
+                      isExpanded: true,
+                      underline: SizedBox(),
+                      items: [
+                        DropdownMenuItem(value: "cash", child: Text("cash".tr)),
+                        DropdownMenuItem(
+                            value: "e_pay", child: Text("e_pay".tr)),
+                      ],
+                      onChanged: (value) {
+                        if (value != null) {
+                          paymentTyoe.paymentType.value = value;
+                          print(paymentTyoe.paymentType.value);
+                        }
+                      },
                     ),
                   ),
                 ),
               ),
+
+              // اختيار صورة السند
               Expanded(
-                  child: TextButton(
-                      onPressed: () async {
-                        await controller.fetchImageDialog();
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: GestureDetector(
+                    onTap: () async {
+                      await controller.fetchImageDialog();
+                    },
+                    child: GestureDetector(
+                      onLongPress: () {
+                        Get.dialog(
+                          Dialog(
+                            backgroundColor: Colors.transparent,
+                            child: InteractiveViewer(
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(12),
+                                child: Image.file(
+                                  controller.pickedimage.value!,
+                                  fit: BoxFit.contain,
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
                       },
-                      child: Text("choose image")))
+                      child: Container(
+                        height: 150,
+                        decoration: BoxDecoration(
+                          color: Theme.of(context)
+                              .colorScheme
+                              .secondary
+                              .withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(color: Colors.grey),
+                        ),
+                        child: controller.pickedimage.value != null
+                            ? ClipRRect(
+                                borderRadius: BorderRadius.circular(12),
+                                child: Image.file(
+                                  controller.pickedimage.value!,
+                                  width: double.infinity,
+                                  height: 150,
+                                  fit: BoxFit.cover,
+                                ),
+                              )
+                            : Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(Icons.upload,
+                                        size: 40, color: Colors.grey),
+                                    SizedBox(height: 8),
+                                    Text("اختر صورة السند",
+                                        style: TextStyle(
+                                            color: Theme.of(context)
+                                                .textTheme
+                                                .bodyLarge
+                                                ?.color)),
+                                  ],
+                                ),
+                              ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
             ],
           ),
   );
 }
 
-// Widget ImagePickers() {
-//   return GetX<ConfirmController>(
-//     builder: (controller) {
-//       final image = controller.pickedimage.value;
-
-//       return Container(
-//         margin: EdgeInsets.all(10),
-//         child: image != null
-//             ? ClipRRect(
-//                 borderRadius: BorderRadius.circular(10),
-//                 child: Image.file(
-//                   image,
-//                   width: double.infinity,
-//                   height: 150,
-//                   fit: BoxFit.cover,
-//                 ),
-//               )
-//             : const Text("لم يتم اختيار صورة"),
-//       );
-//     },
-//   );
-// }
+Widget ImagePickers() {
+  return GetX<ConfirmController>(
+    builder: (controller) {
+      final image = controller.pickedimage.value;
+      return Container(
+        margin: EdgeInsets.all(10),
+        child: image != null
+            ? ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Image.file(
+                  image,
+                  width: double.infinity,
+                  height: 150,
+                  fit: BoxFit.cover,
+                ),
+              )
+            : const Text("لم يتم اختيار صورة"),
+      );
+    },
+  );
+}
 
 Widget bottomButton(BuildContext context) {
   final PaymentOptionController controller =
@@ -165,32 +255,41 @@ Widget bottomButton(BuildContext context) {
   return Container(
     margin: EdgeInsets.all(9),
     decoration: BoxDecoration(
-      color: Color.fromARGB(239, 7, 86, 152),
+      color: Theme.of(context).colorScheme.primary,
       borderRadius: BorderRadius.circular(10),
     ),
     child: TextButton(
       onPressed: () async {
         await gotherallvaraiblepay.printallVaribale();
 
-        if (bookingController.pickedimage.value == null) {
+        if (gotherallvaraiblepay.selectedCurrency.value == null ||
+            gotherallvaraiblepay.selectedCurrency.value == '') {
+          Get.snackbar("خطأ", "يرجى اختيار العملة");
+          return;
+        } else if (bookingController.pickedimage.value == null) {
           Get.snackbar("خطأ", "يرجى اختيار صورة التحويل البنكي");
           return;
         }
+        
 
         await paymentController.makePayment(
           bookingId: gotherallvaraiblepay.bookingId.value,
           paymentMethodId: gotherallvaraiblepay.paymentMethodId.value,
-          paymentSubtotal:double.parse(gotherallvaraiblepay.paymentSubtotal.value),
-          paymentTotalAmount: double.parse(gotherallvaraiblepay.paymentTotalAmount.value),
+          paymentSubtotal:
+              double.parse(gotherallvaraiblepay.paymentSubtotal.value),
+          paymentTotalAmount:
+              double.parse(gotherallvaraiblepay.paymentTotalAmount.value),
           paymentCurrency: gotherallvaraiblepay.selectedCurrency.value,
-          paymentType: "cashe",
+          paymentType: gotherallvaraiblepay.paymentType.value,
           transferImage: bookingController.pickedimage.value!,
           paymentNote: "booking",
           paymentDiscount: "0",
           paymentStatus: 1,
         );
       },
-      child: Text("إكمال", style: TextStyle(color: Colors.white)),
+      child: Text("إكمال",
+          style:
+              TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color)),
     ),
   );
 }
@@ -222,7 +321,6 @@ Widget bookingHotel({
     child: Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // صورة الفندق
         Container(
           margin: EdgeInsets.all(10),
           child: ClipRRect(
@@ -237,14 +335,12 @@ Widget bookingHotel({
             ),
           ),
         ),
-
         Expanded(
           child: Padding(
             padding: EdgeInsets.all(10),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // اسم الفندق + النجمة
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -254,8 +350,7 @@ Widget bookingHotel({
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
-                          overflow: TextOverflow
-                              .ellipsis, // تجنب التمرير عند زيادة النص
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
                     ),
@@ -324,7 +419,7 @@ Widget bookingHotel({
                           size: 18,
                         ),
                         SizedBox(width: 5),
-                        Text("Date:",
+                        Text("Date:".tr,
                             style: TextStyle(color: Colors.grey, fontSize: 14)),
                         SizedBox(width: 5),
                         Text("${check_in_date} - ${check_out_date}",
@@ -339,7 +434,7 @@ Widget bookingHotel({
                           size: 18,
                         ),
                         SizedBox(width: 5),
-                        Text("Guest:",
+                        Text("Guest:".tr,
                             style: TextStyle(color: Colors.grey, fontSize: 14)),
                         SizedBox(width: 5),
                         Text("2 Guests (${rooms_booked} room)",

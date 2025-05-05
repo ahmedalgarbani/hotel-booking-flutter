@@ -12,7 +12,7 @@ class PaymentOptionController extends GetxController {
   var numberAccount = ''.obs;
   var description = ''.obs;
   var iban = ''.obs;
-  var selectedCurrency = ''.obs;
+  var selectedCurrency = 'cash'.obs;
   var isLoading = false.obs;
 
   void fetchPayment(int hotelId) async {
@@ -21,6 +21,11 @@ class PaymentOptionController extends GetxController {
       List<PaymentAccount> paymentList =
           await ShowPaymentOptionService().getAllPayments(hotelId: hotelId);
       paymentOptionList.assignAll(paymentList);
+      print("paymentList====================================== ");
+      print(hotelId);
+      print(hotelId);
+      print(hotelId);
+      print(hotelId);
     } catch (e) {
       print(" worong when uploade  $e");
     } finally {

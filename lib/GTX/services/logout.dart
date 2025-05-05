@@ -1,5 +1,7 @@
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:hotels/GTX/helper/api.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -7,6 +9,7 @@ class AuthService {
   final Api apiService = Api();
 
   Future<bool> refreshAccessToken() async {
+    
     final prefs = await SharedPreferences.getInstance();
     String? refreshToken = prefs.getString('refresh_token');
 
@@ -19,7 +22,7 @@ class AuthService {
 
     try {
       final response = await apiService.postt(
-        url: "http://192.168.183.85:8000/api/token/refresh/",
+        url: "http://192.168.60.85:8000/api/token/refresh/",
         body: {"refresh": refreshToken},
         token: null,  
       );
@@ -43,6 +46,7 @@ class AuthService {
   }
 
   Future<void> logOut(BuildContext context) async {
+    
     final prefs = await SharedPreferences.getInstance();
     String? refreshToken = prefs.getString('refresh_token');
     String? accessToken = prefs.getString('access_token');
@@ -72,7 +76,7 @@ class AuthService {
 
     try {
       var response = await apiService.postt(
-        url: "http://192.168.183.85:8000/api/logout/",
+        url: "http://192.168.60.85:8000/api/logout/",
         body: {"refresh_token": refreshToken},
         token: accessToken, 
       );

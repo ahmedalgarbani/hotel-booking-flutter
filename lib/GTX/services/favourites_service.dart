@@ -1,11 +1,15 @@
 import 'dart:convert';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:hotels/GTX/Models/favroute_model.dart';
+import 'package:hotels/GTX/controller/Controller_favourites.dart';
 import 'package:hotels/GTX/helper/api.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:hotels/GTX/Models/show_hotel_model.dart';
 
 class FavouritesService {
  Future<List<favrourHotelsModel>> getFavourites() async {
+  
   final prefs = await SharedPreferences.getInstance();
   String? token = prefs.getString('access_token');
 
@@ -17,7 +21,7 @@ class FavouritesService {
   print("🟢 Using Token: $token");
 
   List<favrourHotelsModel> data= await Api().getfavrour(
-    url: "http://192.168.183.85:8000/api/favourites/",
+    url: "http://192.168.60.85:8000/api/favourites/",
     token: token,
   );
   print("data hotel data hotel ============================================");
@@ -37,7 +41,7 @@ class FavouritesService {
     };
 
     var response = await Api().post(
-      url: "http://192.168.183.85:8000/api/favourites/",
+      url: "http://192.168.60.85:8000/api/favourites/",
       body: body,  
       token: token,
     );
@@ -52,13 +56,14 @@ class FavouritesService {
 
 
   Future<bool> removeFromFavourites(int hotelId) async {
+    // final FavouritesController favouritesController =Get.find<FavouritesController>();
   try {   
     final prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('access_token');
 
     if (token == null) throw Exception("User not authenticated");
 
-    String url = "http://192.168.183.85:8000/api/favourites/remove/"; 
+    String url = "http://192.168.60.85:8000/api/favourites/remove/"; 
     Map<String, dynamic> body = {
       'hotel': hotelId,  
     };
@@ -70,7 +75,6 @@ class FavouritesService {
       body:body,
       token: token,
     );
-
     print("Response from server: $response");
     return response != null;
   } catch (e) {

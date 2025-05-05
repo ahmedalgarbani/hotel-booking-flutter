@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 Widget citySearch(
     String image, String name, String date, BuildContext context) {
@@ -12,7 +13,7 @@ Widget citySearch(
       width: 220,
       margin: EdgeInsets.only(left: 10, top: 5, bottom: 5),
       decoration: BoxDecoration(
-          color: Colors.white,
+          color: Theme.of(context).colorScheme.secondary,
           borderRadius: BorderRadius.circular(5),
           boxShadow: [
             BoxShadow(
@@ -55,16 +56,20 @@ Widget citySearch(
 }
 
 Widget titleCity() {
+  bool isArabic = Get.locale?.languageCode == 'ar';
+
   return Container(
-    margin: EdgeInsets.only(left: 10, top: 5),
-    alignment: Alignment.bottomLeft,
+    margin: const EdgeInsets.only(left: 10, top: 5, right: 10),
+    alignment: isArabic ? Alignment.bottomRight : Alignment.bottomLeft,
     child: Column(
       mainAxisAlignment: MainAxisAlignment.start,
-      // crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment:
+          isArabic ? CrossAxisAlignment.end : CrossAxisAlignment.start,
       children: [
         Text(
-          "Continue Your Search",
-          style: TextStyle(fontWeight: FontWeight.bold),
+          'continue_search'.tr,
+          textAlign: isArabic ? TextAlign.right : TextAlign.left,
+          style: const TextStyle(fontWeight: FontWeight.bold),
         )
       ],
     ),

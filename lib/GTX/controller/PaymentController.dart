@@ -1,7 +1,9 @@
 import 'dart:io';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hotels/GTX/Models/PaymentModel.dart';
 import 'package:hotels/GTX/services/postPaymentModel.dart';
+import 'package:hotels/GTX/views/screens/PaymentSuccessScreen/PaymentSuccessScreen.dart';
 
 class PaymentController extends GetxController {
   var isLoading = false.obs;
@@ -39,13 +41,14 @@ class PaymentController extends GetxController {
       paymentResult.value = result;
 
       if (result != null) {
-        Get.snackbar("نجاح", "تم الدفع بنجاح");
+        Get.snackbar("نجاح", "تم الدفع بنجاح",backgroundColor: Colors.green);
+         Get.to(() => PaymentSuccessScreen());
       }
     } catch (e) {
       errorMessage.value = "فشلت عملية الدفع: $e";
       print(e);
 
-      Get.snackbar("خطأ", errorMessage.value);
+      // Get.snackbar("خطأ", errorMessage.value);
     } finally {
       isLoading.value = false;
     }

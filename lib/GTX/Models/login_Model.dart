@@ -13,4 +13,14 @@ class Login {
       email: jsonData['email'] ?? "",
     );
   }
+
+ Map<String, dynamic> toJson() {
+    return {
+      
+      'password': password,
+      'email': email,
+    };
+  }
 }
+
+
