@@ -1,7 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:hotels/GTX/Models/login_Model.dart';
-import 'package:hotels/GTX/helper/api.dart';
+
 import 'package:hotels/GTX/services/login.dart';
 import 'package:hotels/GTX/views/screens/mainpagescreens/homepage.dart';
 
@@ -35,18 +34,18 @@ class SignupController extends GetxController {
         print(profileData['username']);
 
         _clearFields();
-        Get.snackbar("Success", "User Login successfully!",backgroundColor: Colors.green);
+        Get.snackbar("تهانينا", "تم التسجيل بنحاح!",backgroundColor: Colors.green);
         print("Login Success: $success");
 
         Get.offAll(Homepage());
       } else {
-        Get.snackbar("Error", "Failed to log in");
+        Get.snackbar("مع الاسف", "فشل تسجيل الدخوب");
       }
     } catch (e) {
       print("Error registering user: $e");
       Get.snackbar(
-        "Error",
-        "uncorrect passworld or Email.".tr
+        "ياراجل",
+        "ادخل الايميل او الباسورد الصحيح.".tr
         ,backgroundColor: Colors.deepOrangeAccent
       );
     } finally {

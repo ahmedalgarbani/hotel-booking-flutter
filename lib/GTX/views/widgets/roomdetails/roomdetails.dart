@@ -35,12 +35,14 @@ Widget roomImageHotel({
 }) {
   return Stack(
     children: [
-      Image.network(
-        mainImage,
-        height: 250,
-        width: double.infinity,
-        fit: BoxFit.cover,
-        errorBuilder: (context, error, stackTrace) => Icon(Icons.broken_image),
+      Container( 
+        child: Image.network(
+          mainImage,
+          height: 250,
+          width: double.infinity,
+          fit: BoxFit.cover,
+          errorBuilder: (context, error, stackTrace) => Icon(Icons.broken_image),
+        ),
       ),
       Container(
         height: 250,
@@ -236,34 +238,39 @@ Widget roomImageTitle({required String ServicTitle}) {
 Widget imageRoom({
   required final String imagePath,
 }) {
-  return GestureDetector(
-    onTap: () {
-      Get.dialog(
-        Dialog(
-          backgroundColor: Colors.transparent,
-          child: InteractiveViewer(
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(12),
-              child: Image.network(
-                imagePath,
-                fit: BoxFit.contain,
+  return Container(
+    margin: EdgeInsets.all(10),
+    child: GestureDetector(
+      onTap: () {
+        Get.dialog(
+          Dialog(
+            backgroundColor: Colors.transparent,
+            child: InteractiveViewer(
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: Image.network(
+                  imagePath,
+                  
+                  fit: BoxFit.contain,
+                ),
               ),
             ),
           ),
+        );
+      },
+      child: Container(
+        
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
         ),
-      );
-    },
-    child: Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(10),
-        child: Image.network(
-          imagePath,
-          height: 150,
-          width: 180,
-          fit: BoxFit.cover,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(10),
+          child: Image.network(
+            imagePath,
+            height: 100,
+            width: 120,
+            fit: BoxFit.cover,
+          ),
         ),
       ),
     ),

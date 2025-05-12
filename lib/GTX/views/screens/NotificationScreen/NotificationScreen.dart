@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hotels/GTX/controller/NotificationsController.dart';
+import 'package:hotels/GTX/views/screens/AddGuestScreen/AddGuestScreen.dart';
 
 class NotificationScreen extends StatelessWidget {
   const NotificationScreen({super.key});
@@ -47,10 +48,9 @@ class NotificationScreen extends StatelessWidget {
                   subtitle: Text(notification.message),
                   trailing: Text(notification.sendTime),
                   onTap: () {
-                    if (notification.actionUrl.isNotEmpty) {
-
-                      print('Open URL: ${notification.actionUrl}');
-                    }
+                    // Get.to(() => AddGuestScreen());
+                    print("notification.message   ${notification.message}");
+                   
                   },
                 ),
               );

@@ -55,31 +55,31 @@ Future bottunSheet({
                     ],
                   ),
                   // عداد الضيوف
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text("Guest"),
-                      Container(
-                        margin: EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey),
-                        ),
-                        child: Row(
-                          children: [
-                            IconButton(
-                              onPressed: counter.decrementCounterQuests,
-                              icon: Icon(Icons.remove),
-                            ),
-                            Text(counter.counterQuest.value.toString()),
-                            IconButton(
-                              onPressed: counter.incrementCounterQuests,
-                              icon: Icon(Icons.add),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //   children: [
+                  //     Text("Guest"),
+                  //     Container(
+                  //       margin: EdgeInsets.all(10),
+                  //       decoration: BoxDecoration(
+                  //         border: Border.all(color: Colors.grey),
+                  //       ),
+                  //       child: Row(
+                  //         children: [
+                  //           IconButton(
+                  //             onPressed: counter.decrementCounterQuests,
+                  //             icon: Icon(Icons.remove),
+                  //           ),
+                  //           Text(counter.counterQuest.value.toString()),
+                  //           IconButton(
+                  //             onPressed: counter.incrementCounterQuests,
+                  //             icon: Icon(Icons.add),
+                  //           ),
+                  //         ],
+                  //       ),
+                  //     ),
+                  //   ],
+                  // ),
                 ],
               ),
             ),
@@ -132,6 +132,7 @@ Future bottunSheet({
                     
                   }
                   Navigator.pop(context);
+                  
                   await bookingController.makeBooking(
                     amount: parsedAmount,
                     hotelId: int.parse(bookingController.hotel_id.value),

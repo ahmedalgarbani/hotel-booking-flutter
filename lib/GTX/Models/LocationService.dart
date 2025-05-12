@@ -2,6 +2,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
 
 class LocationService {
+  
   Future<String> getCurrentCity() async {
     bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
@@ -21,15 +22,21 @@ class LocationService {
     }
 
     Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
+        desiredAccuracy: LocationAccuracy.best);
 
-    List<Placemark> placemarks =
-        await placemarkFromCoordinates(position.latitude, position.longitude);
+    List<Placemark> placemarks = await placemarkFromCoordinates(
+      position.latitude,
+      position.longitude,
+    );
 
     if (placemarks.isNotEmpty) {
-      return placemarks.first.locality ?? " unknow";
+      Placemark place = placemarks.first;
+      return place.locality ?? place.administrativeArea ?? "unknown"; // اسم المدينة
     } else {
-      return " unknow";
+      return "unknown";
     }
   }
 }
+
+
+

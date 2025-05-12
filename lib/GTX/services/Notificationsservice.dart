@@ -12,7 +12,7 @@ class GetAllNotifications {
   
     final prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('access_token');
-    final String url = 'http://192.168.60.85:8000/api/notifications/';
+    final String url = 'http://192.168.8.115:8000/api/notifications/';
 
     List<NotificationsModel> data =
         await Api().getAllNotifications(url: url, token: token);

@@ -118,6 +118,7 @@ class Api {
       throw Exception("Error in loading: ${response.statusCode}");
     }
   }
+
   Future<List<NotificationsModel>> getAllNotifications({
     required String url,
     String? token,
@@ -152,25 +153,53 @@ class Api {
     }
   }
 
-
-
   Future<void> markNotificationAsRead(int id, String token) async {
-  final url = 'http://192.168.183.85:8000/api/notifications/$id/mark_as_read/';
+    final url =
+        'http://192.168.183.85:8000/api/notifications/$id/mark_as_read/';
 
-  final headers = {
-    'Accept': 'application/json',
-    'Content-Type': 'application/json',
-    'Authorization': 'Bearer $token',
-  };
+    final headers = {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
 
-  final response = await http.post(Uri.parse(url), headers: headers);
+    final response = await http.post(Uri.parse(url), headers: headers);
 
-  if (response.statusCode == 200) {
-    print("✅ Notification marked as read.");
-  } else {
-    print("❌ Failed to mark as read: ${response.statusCode}");
+    if (response.statusCode == 200) {
+      print("✅ Notification marked as read.");
+    } else {
+      print("❌ Failed to mark as read: ${response.statusCode}");
+    }
   }
-}
+
+  Future<dynamic> postJsonList({
+    required String url,
+    required List<Map<String, dynamic>> body,
+    String? token,
+  }) async {
+    var headers = {
+      'Content-Type': 'application/json',
+      if (token != null) 'Authorization': 'Bearer $token',
+    };
+
+    final response = await http.post(
+      Uri.parse(url),
+      headers: headers,
+      body: jsonEncode(body),
+    );
+    var decodedData = utf8.decode(response.bodyBytes);
+
+    print("Status Code: ${response.statusCode}");
+    print("Response Body: ${response.body}");
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      print(decodedData);
+
+      return jsonDecode(decodedData);
+    } else {
+      throw Exception('فشل إرسال البيانات: ${response.statusCode}');
+    }
+  }
 
   Future<List<BookingModel>> getBookings(
       {required String url, String? token}) async {
@@ -231,10 +260,13 @@ class Api {
 
     if (data is Map<String, dynamic> &&
         data.containsKey('error') &&
-        data['error'] == "عدد الغرف المطلوب غير متوفر لكل الأيام المطلوبة") {
+        data['error'].toString().contains("عدد الغرف المطلوب غير متوفر")) {
       Get.snackbar(
-          "Booking Error", "عدد الغرف المطلوب غير متوفر لكل الأيام المطلوبة");
-      return null;
+        "خطا",
+        "عدد الغرف المطلوب غير متوفر في التواريخ التالية",
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
     }
 
     if (response.statusCode == 200 || response.statusCode == 201) {
@@ -284,7 +316,7 @@ class Api {
     }
   }
 
-  Future<List<favrourHotelsModel>> getfavrour(
+  Future<List<HotelsModel>> getfavrour(
       {required String url, String? token}) async {
     Map<String, String> headers = {
       'Accept': 'application/json',
@@ -306,12 +338,12 @@ class Api {
       if (data.containsKey('results') && data['results'] is List) {
         List<dynamic> hotels = data['results'];
 
-        List<favrourHotelsModel> hotelList = [];
+        List<HotelsModel> hotelList = [];
         for (var hotelData in hotels) {
           if (hotelData.containsKey('hotel_data')) {
             var hotelJson = hotelData['hotel_data'];
             print("Hotel Data: ${hotelJson}");
-            hotelList.add(favrourHotelsModel.fromJson(hotelJson));
+            hotelList.add(HotelsModel.fromJson(hotelJson));
           }
         }
 
@@ -443,7 +475,7 @@ class Api {
 //   }
 // }
 
-  Future<dynamic> post({
+  Future<Map<String, dynamic>> post({
     required String url,
     required Map<String, dynamic> body,
     File? image,
@@ -471,10 +503,150 @@ class Api {
     print("Response Status Code: ${response.statusCode}");
     print("Response Body: ${response.body}");
 
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      return jsonDecode(response.body);
-    } else {
-      throw Exception("هناك مشكلة في الطلب: ${response.statusCode}");
+    try {
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final decoded = jsonDecode(response.body);
+        if (decoded is Map<String, dynamic>) {
+          return decoded;
+        } else {
+          throw Exception("الاستجابة ليست بصيغة JSON صحيحة (Map)");
+        }
+      } else {
+        throw Exception("هناك مشكلة في الطلب: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("خطأ في عملية الإرسال: $e");
+      throw Exception("فشل في تحليل الاستجابة: $e");
+    }
+  }
+
+  Future<Map<String, dynamic>> postrievew({
+    required String url,
+    required Map<String, dynamic> body,
+    File? image,
+    String? token,
+  }) async {
+    var uri = Uri.parse(url);
+    var request = http.MultipartRequest('POST', uri);
+
+    if (token != null) {
+      request.headers['Authorization'] = 'Bearer $token';
+    }
+
+    request.fields
+        .addAll(body.map((key, value) => MapEntry(key, value.toString())));
+
+    if (image != null) {
+      request.files.add(
+        await http.MultipartFile.fromPath('image', image.path),
+      );
+    }
+
+    var streamedResponse = await request.send();
+    var response = await http.Response.fromStream(streamedResponse);
+
+    print("Response Status Code: ${response.statusCode}");
+    print("Response Body: ${response.body}");
+
+    try {
+      final decoded = jsonDecode(response.body);
+
+      if (response.statusCode != 200 && response.statusCode != 201) {
+        if (decoded is Map<String, dynamic>) {
+          decoded.forEach((key, value) {
+            if (value is List && value.isNotEmpty) {
+              final message = value[0].toString();
+
+              if (message.contains("not a valid choice")) {
+                Get.snackbar(
+                  "خطأ في الإدخال",
+                  "يرجى اختيار قيمة صالحة لـ ${_getFieldNameInArabic(key)}",
+                  snackPosition: SnackPosition.TOP,
+                  backgroundColor: Colors.deepOrangeAccent,
+                  colorText: Colors.black,
+                );
+              } else if (message.contains("This field may not be blank.")) {
+                Get.snackbar(
+                  "خطأ في الإدخال",
+                  "يرجى تعبئة حقل ${_getFieldNameInArabic(key)}",
+                  snackPosition: SnackPosition.TOP, 
+                  backgroundColor: Colors.deepOrangeAccent,
+                  colorText: Colors.black,
+                );
+              } else {}
+            }
+          });
+
+          throw Exception("فشل التحقق من الحقول");
+        } else {
+          throw Exception("استجابة غير صالحة من السيرفر");
+        }
+      }
+
+      if (decoded is Map<String, dynamic>) {
+        return decoded;
+      } else {
+        throw Exception("الاستجابة ليست بصيغة JSON صحيحة (Map)");
+      }
+    } catch (e) {
+      print("خطأ في عملية الإرسال: $e");
+      throw Exception("فشل في تحليل الاستجابة: $e");
+    }
+  }
+
+  String _getFieldNameInArabic(String field) {
+    switch (field) {
+      case "rating_location":
+        return "تقييم الموقع";
+      case "rating_value_for_money":
+        return "تقييم القيمة مقابل المال";
+      case "rating_cleanliness":
+        return "تقييم النظافة";
+      case "rating_service":
+        return "تقييم الخدمة";
+      case "review":
+        return "المراجعة";
+      default:
+        return "الحقل $field";
+    }
+  }
+
+  Future<dynamic> postgust({
+    required String url,
+    required Map<String, dynamic> body,
+    File? image,
+    String? token,
+  }) async {
+    var uri = Uri.parse(url);
+    var request = http.MultipartRequest('POST', uri);
+
+    if (token != null) {
+      request.headers['Authorization'] = 'Bearer $token';
+    }
+
+    request.fields
+        .addAll(body.map((key, value) => MapEntry(key, value.toString())));
+
+    if (image != null) {
+      request.files.add(
+        await http.MultipartFile.fromPath('id_card_image', image.path),
+      );
+    }
+
+    var streamedResponse = await request.send();
+    var response = await http.Response.fromStream(streamedResponse);
+
+    print("Response Status Code: ${response.statusCode}");
+    print("Response Body: ${response.body}");
+
+    try {
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return jsonDecode(response.body);
+      } else {
+        throw Exception("هناك مشكلة في الطلب: ${response.statusCode}");
+      }
+    } catch (e) {
+      print(e);
     }
   }
 

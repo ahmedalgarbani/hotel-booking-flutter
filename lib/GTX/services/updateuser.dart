@@ -23,7 +23,7 @@ class Updateuser {
     final prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('access_token');
     Map<String, dynamic> data = await Updateapi().put(
-      url: 'http://192.168.60.85:8000/api/user-profile/',
+      url: 'http://192.168.8.115:8000/api/user-profile/',
       body: {
         'username': username,
         'email': email,

@@ -24,7 +24,7 @@ class ChangePasswordService {
 
     try {
       Map<String, dynamic>? data = await Api().post(
-        url: 'http://192.168.60.85:8000/api/change-password/',
+        url: 'http://192.168.8.115:8000/api/change-password/',
         body: {
           'old_password': oldPassword,
           'new_password': newPassword,

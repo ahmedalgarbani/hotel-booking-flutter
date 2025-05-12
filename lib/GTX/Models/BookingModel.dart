@@ -8,6 +8,8 @@ class BookingModel {
   final int roomsBooked;
   final String hotelImage;
   final List<BookingDetail> details;
+  final List<GuestModel> guests;
+
   final String userName;
   final String status;
   BookingModel({
@@ -22,6 +24,7 @@ class BookingModel {
     required this.details,
     required this.userName,
     required this.status,
+    required this.guests,
   });
 
   factory BookingModel.fromJson(Map<String, dynamic> json) {
@@ -38,8 +41,13 @@ class BookingModel {
               ?.map((e) => BookingDetail.fromJson(e))
               .toList() ??
           [],
+          guests: (json['guests'] as List<dynamic>?)
+          ?.map((e) => GuestModel.fromJson(e))
+          .toList() ?? [],
+
       userName: json['user_name'] ?? '',
       status: json['status']?.toString() ?? '',
+
     );
   }
 
@@ -54,8 +62,11 @@ class BookingModel {
       'rooms_booked': roomsBooked,
       'hotel_image': hotelImage,
       'details': details.map((e) => e.toJson()).toList(),
+      'guests': guests.map((e) => e.toJson()).toList(),
+
       'user_name': userName,
       'status': status,
+
     };
   }
 }
@@ -115,6 +126,52 @@ class BookingDetail {
       'price': price,
       'total': total,
       'notes': notes,
+    };
+  }
+}
+
+
+class GuestModel {
+  final String name;
+  final String phoneNumber;
+  final String? idCardImage;
+  final String gender;
+  final String birthdayDate;
+  final String checkInDate;
+  final String checkOutDate;
+
+  GuestModel({
+    required this.name,
+    required this.phoneNumber,
+    this.idCardImage,
+    required this.gender,
+    required this.birthdayDate,
+    required this.checkInDate,
+    required this.checkOutDate,
+  });
+
+  factory GuestModel.fromJson(Map<String, dynamic> json) {
+    
+    return GuestModel(
+      name: json['name'] ?? '',
+      phoneNumber: json['phone_number'] ?? '',
+      idCardImage: json['id_card_image'],
+      gender: json['gender'] ?? '',
+      birthdayDate: json['birthday_date'] ?? '',
+      checkInDate: json['check_in_date'] ?? '',
+      checkOutDate: json['check_out_date'] ?? '',
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      'phone_number': phoneNumber,
+      'id_card_image': idCardImage,
+      'gender': gender,
+      'birthday_date': birthdayDate,
+      'check_in_date': checkInDate,
+      'check_out_date': checkOutDate,
     };
   }
 }

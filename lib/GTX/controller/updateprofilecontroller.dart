@@ -64,7 +64,7 @@ class Updateprofilecontroller extends GetxController {
       print(birthDateController.value.text);
       print(selectedGender.value);
       _clearFields();
-      Get.snackbar("Success", "User created successfully!",backgroundColor: Colors.green);
+      Get.snackbar("تهانينا", "تم تحديث البيانات!",backgroundColor: Colors.green);
     } catch (e) {
       print("Error registering user: $e");
       // Get.snackbar("Error", "An error occurred during registration.");

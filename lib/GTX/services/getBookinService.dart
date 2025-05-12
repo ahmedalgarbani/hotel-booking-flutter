@@ -15,7 +15,7 @@ class getBookingService {
     if (token == null) throw Exception("User not authenticated");
 
     List<BookingModel> data = await Api().getBookings(
-      url: "http://192.168.60.85:8000/api/bookings/",
+      url: "http://192.168.8.115:8000/api/bookings/",
       token: token,
     );
 

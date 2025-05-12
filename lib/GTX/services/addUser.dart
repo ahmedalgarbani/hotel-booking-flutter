@@ -1,9 +1,12 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:hotels/GTX/Models/rigetermodel.dart';
 import 'package:hotels/GTX/helper/api.dart';
+  import 'package:http/http.dart' as http;
+
 
 class AddUser  {
 
@@ -24,7 +27,7 @@ class AddUser  {
     
 
     Map<String, dynamic> data = await Api().post(
-      url: 'http://192.168.60.85:8000/api/register/',
+      url: 'http://192.168.8.115:8000/api/register/',
       body: {
         'username': username,
         'email': email,
@@ -40,4 +43,32 @@ class AddUser  {
 
     return Rigetermodel.fromJson(data);
   }
+
+
+
+
+// Future<void> sendOTP(String phoneNumber) async {
+//   final url = 'http://192.168.8.115:8000/api/send-sms/'; 
+//   final response = await http.post(
+//     Uri.parse(url),
+//     body: jsonEncode({'phone_number': phoneNumber}),
+//     headers: {
+//       'Content-Type': 'application/json',
+//     },
+//   );
+
+//   if (response.statusCode == 200) {
+//     final responseData = jsonDecode(response.body);
+//     if (responseData['success']) {
+//       Get.snackbar("Success", "OTP sent successfully!");
+//     } else {
+//       Get.snackbar("Error", "Failed to send OTP. Please try again.");
+//     }
+//   } else {
+//     Get.snackbar("Error", "An error occurred while sending OTP.");
+//   }
+// }
+
+
+
 }

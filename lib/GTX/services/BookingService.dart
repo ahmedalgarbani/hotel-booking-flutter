@@ -29,7 +29,7 @@ class BookingService {
     }
 
     Map<String, dynamic>? data = await Api().postBooking(
-      url: 'http://192.168.60.85:8000/api/bookings/create_booking/',
+      url: 'http://192.168.8.115:8000/api/bookings/create_booking/',
       body: {
         'hotel_id': hotelId,
         'room_id': roomId,

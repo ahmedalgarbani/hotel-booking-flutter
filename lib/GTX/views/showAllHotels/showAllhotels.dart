@@ -5,6 +5,7 @@ import 'package:hotels/GTX/controller/hotelLocation_Controller.dart';
 import 'package:hotels/GTX/controller/hotelinf.dart';
 import 'package:hotels/GTX/controller/hotels_controller.dart';
 import 'package:hotels/GTX/views/widgets/ConnectionCheckWidget/ConnectionCheckWidget.dart';
+import 'package:hotels/GTX/views/widgets/homepage/carddhotel.dart';
 import 'package:hotels/GTX/views/widgets/showAllhotelwig/showallhotelwidget.dart';
 
 class Showallhotels extends StatefulWidget {
@@ -16,17 +17,24 @@ class _ShowallhotelsState extends State<Showallhotels> {
   final Hotelinfo controller = Get.find<Hotelinfo>();
   final NetworkController connectivityController =
       Get.find<NetworkController>();
+      @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    controller.fetchHotels();
+  }
+
 
   @override
   Widget build(BuildContext context) {
-   
-      return Scaffold(
-        backgroundColor:Theme.of(context).colorScheme.background ,
-        appBar: AppBar(
-          title: Text("Hotels".tr),
-          centerTitle: true,
-        ),
-        body: Obx(() {
+    return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.background,
+      appBar: AppBar(
+        title: Text("Hotels".tr),
+        centerTitle: true,
+      ),
+      body: Obx(() {
+        if (controller.hotelsList.isNotEmpty) {
           return Padding(
             padding: const EdgeInsets.all(5.0),
             child: GridView.builder(
@@ -35,7 +43,7 @@ class _ShowallhotelsState extends State<Showallhotels> {
                 crossAxisCount: 2,
                 crossAxisSpacing: 10,
                 mainAxisSpacing: 10,
-                childAspectRatio: 0.75,
+                childAspectRatio: 0.80,
               ),
               itemBuilder: (context, index) {
                 final hotel = controller.hotelsList[index];
@@ -51,8 +59,17 @@ class _ShowallhotelsState extends State<Showallhotels> {
               },
             ),
           );
-        }),
-      );
-  
+        } else {
+          return controller.isFetching.value
+              ? Center(child: CircularProgressIndicator())
+              : Center(
+                  child: imageNoConnection(
+                  width: double.infinity,
+                  height: double.infinity,
+                  imagepath: "assets/imageall.png",
+                ));
+        }
+      }),
+    );
   }
 }

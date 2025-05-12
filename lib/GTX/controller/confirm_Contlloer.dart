@@ -163,12 +163,10 @@ class ConfirmController extends GetxController {
     
     if (check_in_date.value.isEmpty || check_out_date.value.isEmpty) {
       if (!Get.isSnackbarOpen) {
-        showFlushbarMessage(
-          context,
-          "Please select dates",
-          "You must select a check-in and check-out date.",
-          Colors.red,
-        );
+
+        Get.snackbar("يا راجل",
+          "الرجاء تحديد رنج التاريخ.",backgroundColor: Colors.deepOrangeAccent);
+       
       }
       return;
     }
@@ -177,12 +175,9 @@ class ConfirmController extends GetxController {
     String? token = prefs.getString('access_token');
 
     if (token == null) {
-      showFlushbarMessage(
-        context,
-        "Not Logged In",
-        "Please log in to continue.",
-        Colors.red,
-      );
+      Get.snackbar( "ليس لديك حساب ",
+        "انشا حساب بالاول.",backgroundColor: 
+        Colors.red,);
       return;
     }
 
@@ -230,7 +225,7 @@ class ConfirmController extends GetxController {
       }
     } catch (e) {
       print(" فشل الحجز: $e");
-      Get.snackbar("try ", "connect with correct ipadrees",backgroundColor: Colors.deepOrangeAccent);
+      // Get.snackbar("try ", "connect with correct ipadrees",backgroundColor: Colors.deepOrangeAccent);
     } finally {
       isLoading.value = false;
     }
@@ -295,4 +290,11 @@ class ConfirmController extends GetxController {
       print("📅 تاريخ الخروج: '${check_out_date.value}'");
     }
   }
+
+void clearAllVariables() {
+pickedimage.value=null;
+  
+}
+
+
 }

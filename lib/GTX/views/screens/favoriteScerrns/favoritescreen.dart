@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hotels/GTX/Models/favroute_model.dart';
+import 'package:hotels/GTX/Models/show_hotel_model.dart';
 import 'package:hotels/GTX/controller/Booking_details_Controller.dart';
 import 'package:hotels/GTX/controller/Controller_favourites.dart';
 import 'package:hotels/GTX/controller/connection_controller.dart';
@@ -18,8 +19,8 @@ class _FavoritescreenState extends State<Favoritescreen> {
   final BookingController bookingController = Get.find<BookingController>();
   final NetworkController connectivityController =
       Get.find<NetworkController>();
-  final FavouritesController favController =Get.find<FavouritesController>();
-List<favrourHotelsModel> _favroutSearch = [];
+  final FavouritesController favController = Get.find<FavouritesController>();
+  List<HotelsModel> _favroutSearch = [];
 
   @override
   void initState() {
@@ -28,20 +29,22 @@ List<favrourHotelsModel> _favroutSearch = [];
   }
 
   void _runfavroutSearchFilter(String enteredKeyword) {
-    List<favrourHotelsModel> results = [];
+    List<HotelsModel> results = [];
 
     if (enteredKeyword.isEmpty) {
       results = favController.favourites;
     } else {
-      results = favController.favourites.where((hotel) =>
-        hotel.name.toLowerCase().contains(enteredKeyword.toLowerCase())
-      ).toList();
+      results = favController.favourites
+          .where((hotel) =>
+              hotel.name.toLowerCase().contains(enteredKeyword.toLowerCase()))
+          .toList();
     }
 
     setState(() {
       _favroutSearch = results;
     });
   }
+
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: false,
@@ -57,10 +60,10 @@ List<favrourHotelsModel> _favroutSearch = [];
           padding: const EdgeInsets.all(8),
           child: Column(
             children: [
-               buildSearchBar(
-        context: context,
-        onChanged: _runfavroutSearchFilter, // ← مرر الدالة هنا
-      ),
+              buildSearchBar(
+                context: context,
+                onChanged: _runfavroutSearchFilter,
+              ),
               const SizedBox(height: 10),
               Expanded(
                 child: controller.isLoading.value
@@ -74,12 +77,13 @@ List<favrourHotelsModel> _favroutSearch = [];
                               crossAxisCount: 2,
                               crossAxisSpacing: 10,
                               mainAxisSpacing: 10,
-                              childAspectRatio: 0.65,
+                              childAspectRatio: 0.80,
                             ),
                             itemCount: _favroutSearch.length,
                             itemBuilder: (context, index) {
                               final hotel = _favroutSearch[index];
                               return FavoriteCard(
+                                hotel: hotel ,
                                 hotelName: hotel.name,
                                 imagehotel: hotel.image,
                                 location: hotel.location,

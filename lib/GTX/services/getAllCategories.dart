@@ -6,8 +6,7 @@ import 'package:hotels/GTX/helper/api.dart';
 
 class Getallcategories {
   Future<List<CategoriesModel>> getetcategories() async {
-   
-    final String url = 'http://192.168.60.85:8000/api/categories/';
+    final String url = 'http://192.168.8.115:8000/api/categories/';
   List<CategoriesModel> data = await Api().getAllCategoreies(url:url);
     return data;
   }

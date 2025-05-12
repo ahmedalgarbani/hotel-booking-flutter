@@ -6,6 +6,8 @@ import 'package:hotels/GTX/Models/rigetermodel.dart';
 import 'package:hotels/GTX/controller/Booking_details_Controller.dart';
 import 'package:hotels/GTX/controller/ChangePasswordController.dart';
 import 'package:hotels/GTX/controller/Controller_favourites.dart';
+import 'package:hotels/GTX/controller/GuestController.dart';
+import 'package:hotels/GTX/controller/HotelReviewController.dart';
 import 'package:hotels/GTX/controller/NotificationsController.dart';
 import 'package:hotels/GTX/controller/PaymentController.dart';
 import 'package:hotels/GTX/controller/Register_Controll.dart';
@@ -14,17 +16,22 @@ import 'package:hotels/GTX/controller/categoriesController.dart';
 import 'package:hotels/GTX/controller/confirm_Contlloer.dart';
 import 'package:hotels/GTX/controller/connection_controller.dart';
 import 'package:hotels/GTX/controller/counter_Controller.dart';
-import 'package:hotels/GTX/controller/deleteFavouritesController.dart';
 import 'package:hotels/GTX/controller/gotherAllvaraiblepay_controller.dart';
 import 'package:hotels/GTX/controller/hotelLocation_Controller.dart';
 import 'package:hotels/GTX/controller/hotelinf.dart';
 import 'package:hotels/GTX/controller/login_controller.dart';
+import 'package:hotels/GTX/controller/otp_controller.dart';
 import 'package:hotels/GTX/controller/paymentOption_Cotroller.dart';
+import 'package:hotels/GTX/controller/rievewRRoomDetail_controller.dart';
 import 'package:hotels/GTX/controller/search_controller.dart';
+import 'package:hotels/GTX/controller/send_controller.dart';
 import 'package:hotels/GTX/controller/showProfileinfo.dart';
+import 'package:hotels/GTX/controller/sortedByrievew.dart';
 import 'package:hotels/GTX/controller/updateprofilecontroller.dart';
 import 'package:hotels/GTX/services/getBookinService.dart';
 import 'package:hotels/GTX/thems.dart';
+import 'package:hotels/GTX/views/screens/AddGuestScreen/AddGuestScreen.dart';
+import 'package:hotels/GTX/views/screens/CheckCodeScreen/CheckCodeScreen.dart';
 import 'package:hotels/GTX/views/screens/mainpagescreens/homepage.dart';
 import 'package:hotels/GTX/views/screens/mybookingscreen/bookingscreen.dart';
 import 'package:hotels/GTX/views/widgets/ConnectionCheckWidget/ConnectionCheckWidget.dart';
@@ -74,6 +81,13 @@ class MyApp extends StatelessWidget {
     Get.put(Updateprofilecontroller());
     Get.put(Showprofileinfo());
     Get.put(ChangePasswordController());
+    Get.put(GuestController());
+    Get.put(HotelReviewController());
+    Get.put(RievewrroomdetailController());
+    Get.put(SortedHotelReviewController());
+    
+    Get.put(SendController());
+    Get.put(OTPController());
     // Get.put(NetworkController());
     Get.put(NotificationsController());
    final themeController= Get.put(ThemeController());
@@ -82,6 +96,7 @@ class MyApp extends StatelessWidget {
 
 
     return Obx(() => GetMaterialApp(
+      
   debugShowCheckedModeBanner: false,
   theme: lightMode,
   darkTheme: darkMode,

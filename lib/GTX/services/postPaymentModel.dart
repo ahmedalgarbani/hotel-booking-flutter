@@ -36,7 +36,7 @@ class Postpaymentmodel {
     };
 
     Map<String, dynamic> data = await Api().postMultipart(
-      url: 'http://192.168.60.85:8000/api/payment/make_payment/',
+      url: 'http://192.168.8.115:8000/api/payment/make_payment/',
       body: bodys,
       imageFile: transferImage,
       token: token,
@@ -67,7 +67,7 @@ class Postpaymentmodel {
 //   String? token = prefs.getString('access_token');
 
 //    Map<String, dynamic>? data = await Api().postPayment(
-//     url: 'http://192.168.60.85:8000/api/payment/make_payment/',
+//     url: 'http://192.168.8.115:8000/api/payment/make_payment/',
 //     token: token,
 //     bookingId: bookingId,
 //     paymentMethodId: paymentMethodId,

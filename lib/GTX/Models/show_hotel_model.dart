@@ -1,12 +1,3 @@
-
-
-
-
-
-
-
-
-
 class HotelsModel {
   final int id;
   final String name;
@@ -14,6 +5,8 @@ class HotelsModel {
   final String description;
   final String location;
   final List<modelRoomm> rooms;
+  final List<ReviewModel> reviews;
+  final List<ModelService> services;
 
   HotelsModel({
     required this.id,
@@ -22,6 +15,8 @@ class HotelsModel {
     required this.description,
     required this.location,
     required this.rooms,
+    required this.reviews,
+    required this.services,
   });
 
   factory HotelsModel.fromJson(Map<String, dynamic> jsonData) {
@@ -33,19 +28,26 @@ class HotelsModel {
     print("اسم الفندق: ${jsonData['name']}");
     print("اسم الفندق: ${jsonData['name']}");
     print("اسم الفندق: ${jsonData['name']}");
-   
-  return HotelsModel(
-    id: jsonData['id'] ?? 0, 
-    name: jsonData['name'] ?? "",  
-    image: jsonData['profile_picture'] ?? "", 
-    description: jsonData['description'] ?? "", 
-    location: jsonData['location'] ?? "", 
-    rooms: (jsonData['rooms'] as List<dynamic>?)
-            ?.map((room) => modelRoomm.fromJson(room))
-            .toList() ?? [],  
-  );
 
+    return HotelsModel(
+      id: jsonData['id'] ?? 0,
+      name: jsonData['name'] ?? "",
+      image: jsonData['profile_picture'] ?? "",
+      description: jsonData['description'] ?? "",
+      location: jsonData['location'] ?? "",
+      rooms: (jsonData['rooms'] as List<dynamic>?)
+              ?.map((room) => modelRoomm.fromJson(room))
+              .toList() ??
+          [],
+      reviews: (jsonData['reviews'] as List<dynamic>?)
+              ?.map((review) => ReviewModel.fromJson(review))
+              .toList() ??[],
 
+      services: (jsonData['services'] as List<dynamic>?)
+              ?.map((review) => ModelService.fromJson(review))
+              .toList() ??
+          [],
+    );
   }
 
   Map<String, dynamic> toJson() {
@@ -56,6 +58,8 @@ class HotelsModel {
       'description': description,
       'location': location,
       'rooms': rooms.map((room) => room.toJson()).toList(),
+      'reviews': reviews.map((review) => review.toJson()).toList(),
+      'services': services.map((services) => services.toJson()).toList(),
     };
   }
 
@@ -103,11 +107,11 @@ class modelRoomm {
       roomImages: (jsonData['images'] as List<dynamic>?)
               ?.map((img) => modelRoomImagee.fromJson(img))
               .toList() ??
-          [], 
+          [],
       services: (jsonData['services'] as List<dynamic>?)
               ?.map((service) => modelServiceModel.fromJson(service))
               .toList() ??
-          [], 
+          [],
     );
   }
 
@@ -193,8 +197,93 @@ class modelServiceModel {
   }
 }
 
+class ReviewModel {
+  final int id;
+  final int hotel;
+  final int user;
+  final String? image;
+  final int ratingService;
+  final int ratingLocation;
+  final int ratingValueForMoney;
+  final int ratingCleanliness;
+  final String review;
+  final bool status;
+  final String createdAt;
+  final String updatedAt;
+
+  ReviewModel({
+    required this.id,
+    required this.hotel,
+    required this.user,
+    this.image,
+    required this.ratingService,
+    required this.ratingLocation,
+    required this.ratingValueForMoney,
+    required this.ratingCleanliness,
+    required this.review,
+    required this.status,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+
+  factory ReviewModel.fromJson(Map<String, dynamic> json) {
+    return ReviewModel(
+      id: json['id'] ?? 0,
+      hotel: json['hotel'] ?? 0,
+      user: json['user'] ?? 0,
+      image: json['image'],
+      ratingService: json['rating_service'] ?? 0,
+      ratingLocation: json['rating_location'] ?? 0,
+      ratingValueForMoney: json['rating_value_for_money'] ?? 0,
+      ratingCleanliness: json['rating_cleanliness'] ?? 0,
+      review: json['review'] ?? "",
+      status: json['status'] ?? false,
+      createdAt: json['created_at'] ?? "",
+      updatedAt: json['updated_at'] ?? "",
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'hotel': hotel,
+      'user': user,
+      'image': image,
+      'rating_service': ratingService,
+      'rating_location': ratingLocation,
+      'rating_value_for_money': ratingValueForMoney,
+      'rating_cleanliness': ratingCleanliness,
+      'review': review,
+      'status': status,
+      'created_at': createdAt,
+      'updated_at': updatedAt,
+    };
+  }
+}
 
 
+class ModelService {
+  final int id;
+  final String name;
 
+  ModelService({
+    required this.id,
+    required this.name,
+  });
+
+  factory ModelService.fromJson(jsonData) {
+    return ModelService(
+      id: jsonData['id'] ?? "",
+      name: jsonData['name'] ?? "",
+    );
+  }
+
+ Map<String, dynamic> toJson() {
+    return {  
+      'id': id,
+      'name': name,
+    };
+  }
+}
 
 

@@ -7,7 +7,7 @@ import 'package:hotels/GTX/helper/updateapi.dart';
 class Showprifiledata {
   Future<List<Rigetermodel>> getAlluser() async {
    
-    final String url = 'http://192.168.60.85:8000/api/user-profile/';
+    final String url = 'http://192.168.8.115:8000/api/user-profile/';
 
     final prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('access_token');

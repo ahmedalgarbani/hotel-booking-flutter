@@ -8,7 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:hotels/GTX/Models/show_hotel_model.dart';
 
 class FavouritesService {
- Future<List<favrourHotelsModel>> getFavourites() async {
+ Future<List<HotelsModel>> getFavourites() async {
   
   final prefs = await SharedPreferences.getInstance();
   String? token = prefs.getString('access_token');
@@ -20,8 +20,8 @@ class FavouritesService {
 
   print("🟢 Using Token: $token");
 
-  List<favrourHotelsModel> data= await Api().getfavrour(
-    url: "http://192.168.60.85:8000/api/favourites/",
+  List<HotelsModel> data= await Api().getfavrour(
+    url: "http://192.168.8.115:8000/api/favourites/",
     token: token,
   );
   print("data hotel data hotel ============================================");
@@ -41,7 +41,7 @@ class FavouritesService {
     };
 
     var response = await Api().post(
-      url: "http://192.168.60.85:8000/api/favourites/",
+      url: "http://192.168.8.115:8000/api/favourites/",
       body: body,  
       token: token,
     );
@@ -63,7 +63,7 @@ class FavouritesService {
 
     if (token == null) throw Exception("User not authenticated");
 
-    String url = "http://192.168.60.85:8000/api/favourites/remove/"; 
+    String url = "http://192.168.8.115:8000/api/favourites/remove/"; 
     Map<String, dynamic> body = {
       'hotel': hotelId,  
     };

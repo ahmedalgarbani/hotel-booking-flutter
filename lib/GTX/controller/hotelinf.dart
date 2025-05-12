@@ -48,7 +48,11 @@ class Hotelinf extends GetxController {
 class Hotelinfo extends GetxController {
   var hotelsList = <HotelsModel>[].obs;
   var hotelroom = <modelRoomm>[].obs;
+  var reviewHotel = <ReviewModel>[].obs;
+  var Servicehotel = <ModelService>[].obs;
+
   var hotel_name = "".obs;
+ 
   var image_hotel = "".obs;
   var room_name = "".obs;
   var hotelroomService = <modelServiceModel>[].obs;
@@ -64,30 +68,25 @@ class Hotelinfo extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    toggleFavorite();
+    // toggleFavorite();
     fetchHotels();
-
-    //    Timer.periodic(Duration(seconds: 1), (timer) {
-    //   fetchHotels();
-    // });
   }
+  
 
   void fetchHotels() async {
     isFetching.value = true;
     try {
       List<HotelsModel> fetchedHotels = await GetAllHotels().getAllHotels();
-      _saveHotelsLocally(fetchedHotels);
       hotelsList.value = fetchedHotels;
     } catch (e) {
       print("Error fetching data: $e");
-      hotelsList.value = await _getHotelsLocally();
+      hotelsList.clear();
     } finally {
       isFetching.value = false;
     }
     update();
   }
 
-// final ConfirmController bookingController = Get.find<ConfirmController>();
   void loadHotelRoomsById(int hotelId) {
     final hotel = hotelsList.firstWhereOrNull((h) => h.id == hotelId);
 
@@ -95,14 +94,38 @@ class Hotelinfo extends GetxController {
       hotel_name.value = hotel.name;
       image_hotel.value = hotel.image;
       hotelroom.value = hotel.rooms;
-      print("hotel_namehotel_namehotel_namehotel_namehotel_name");
-      print("hotel_name");
-      print("hotel_name");
-      print(hotel_name);
+      // for (var element in hotelroom) {
+      //   print(element);
+        
+      // }
+
+      
+      reviewHotel.value = hotel.reviews;
+      Servicehotel.value = hotel.services;
     } else {
       hotelroom.clear();
+      reviewHotel.clear();
+      Servicehotel.clear();
     }
   }
+
+  // void loadHotelreviewHotelById(int hotelId) {
+  //   final hotel = hotelsList.firstWhereOrNull((h) => h.id == hotelId);
+  //   if (hotel != null) {
+  //     image_hotel.value = hotel.image;
+  //     reviewHotel.value = hotel.reviews;
+
+  //       reviewHotel.forEach((room) {
+  //     print("معرف : ${room.id}");
+  //     print("اسم : ${room.ratingCleanliness}");
+  //     print("السعة : ${room.ratingService}");
+  //     print("السعر : ${room.ratingLocation}");
+  //     print("----");
+  //   });
+  //   } else {
+  //     reviewHotel.clear();
+  //   }
+  // }
 
   void loadHotelRoomsServiceById(int room_id) {
     final rooms = hotelroom.firstWhereOrNull((h) => h.id == room_id);
@@ -123,48 +146,29 @@ class Hotelinfo extends GetxController {
     }
   }
 
-  void _saveHotelsLocally(List<HotelsModel> hotels) async {
-    final prefs = await SharedPreferences.getInstance();
-    List<String> hotelJsonList =
-        hotels.map((hotel) => json.encode(hotel.toJson())).toList();
-    prefs.setStringList('hotels', hotelJsonList);
-  }
-
-  Future<List<HotelsModel>> _getHotelsLocally() async {
-    final prefs = await SharedPreferences.getInstance();
-    List<String>? hotelJsonList = prefs.getStringList('hotels');
-    if (hotelJsonList != null) {
-      return hotelJsonList
-          .map((jsonStr) => HotelsModel.fromJson(json.decode(jsonStr)))
-          .toList();
-    } else {
-      return [];
-    }
-  }
-  
   Future<void> favorite(int id, context) async {
-        for (var element in Get.find<FavouritesController>().favourites) {
-          if (id==element.id) {
-             Get.snackbar("Unsuccess", "Favourite already exists!",
+    for (var element in Get.find<FavouritesController>().favourites) {
+      if (id == element.id) {
+        Get.snackbar("ياراجل", "لقد اضفت هذا الفندق بالفعل!",
             backgroundColor: Colors.deepOrange);
-          }
-          
-        }
+        return;
+      }
+    }
+
     try {
       bool success = await FavouritesService().addToFavourites(id);
 
       Get.find<FavouritesController>().fetchFavourites();
-      
-       
+
       if (success) {
-        Get.snackbar("successFul", "successfull to add to favroute.!",
+        Get.snackbar("تهانينا", "تم الاضافه للمفضله بنجاح!",
             backgroundColor: Colors.green);
       }
     } catch (e) {
-      print(" Unsuccessfull to add to favroute call the engireening $e");
+      print("Failed to add to favourites: $e");
 
-      Get.snackbar(
-          "Unsuccessful", "successfull to add to favroute,communaction with!",
+      Get.snackbar("مع الاسم",
+          "لم يتم الاضفافه",
           backgroundColor: Colors.red);
     }
   }

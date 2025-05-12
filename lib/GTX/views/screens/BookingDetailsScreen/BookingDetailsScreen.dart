@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:hotels/GTX/controller/Booking_details_Controller.dart';
 import 'package:hotels/GTX/Models/BookingModel.dart';
 import 'package:hotels/GTX/controller/connection_controller.dart';
+import 'package:hotels/GTX/views/screens/BookingDetailsScreen/guestBookingScreen.dart';
 import 'package:hotels/GTX/views/widgets/ConnectionCheckWidget/ConnectionCheckWidget.dart';
 import 'package:intl/intl.dart';
 
@@ -30,17 +31,15 @@ class _BookingdetailsscreenState extends State<Bookingdetailsscreen> {
     super.initState();
     detailBooking.loadBookingDetailsById(widget.id);
   }
-final NetworkController connectivityController =
+
+  final NetworkController connectivityController =
       Get.find<NetworkController>();
   @override
   Widget build(BuildContext context) {
-
-   
-     
-        return Scaffold(
+    return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
-        title:  Text("Booking Invoice".tr),
+        title: Text("Booking Invoice".tr),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
@@ -49,7 +48,7 @@ final NetworkController connectivityController =
           children: [
             _buildBookingInfo(widget.bookingData),
             const SizedBox(height: 20),
-            _buildServicesTable(), // جدول الخدمات
+            _buildServicesTable(),
             const SizedBox(height: 20),
             // _buildTotalAmount(context),
           ],
@@ -57,10 +56,6 @@ final NetworkController connectivityController =
       ),
       bottomNavigationBar: _buildTotalAmount(context),
     );
-  
-  
-     
-  
   }
 
   // ------------------- Main Booking Info -------------------
@@ -72,8 +67,9 @@ final NetworkController connectivityController =
         color: Theme.of(context).colorScheme.secondary,
         boxShadow: [
           BoxShadow(
-            offset: const Offset(0.1, 0.1),
-            blurRadius: 0.5,
+            offset: const Offset(0.4, 0.4),
+            blurRadius: 0.6,
+            spreadRadius: 0.8,
             color: Colors.grey.withOpacity(0.3),
           ),
         ],
@@ -85,7 +81,12 @@ final NetworkController connectivityController =
           _nameBookingHotel(
             hotelname: bookingData.hotelName,
             userName: bookingData.userName,
-            nameRoom: bookingData.roomName,
+          ),
+          _customDivider(),
+          _roomNameAndebooed(
+            RooName:bookingData.roomName ,
+            labname: "Room Name".tr,
+            labname2: "RoomStateus".tr,
           ),
           _customDivider(),
           _DateBookingHotel(
@@ -96,7 +97,18 @@ final NetworkController connectivityController =
           _roomBookingHotel(
             amount: bookingData.amount.toString(),
             numberRoom: bookingData.roomsBooked.toString(),
+            labname: "Price".tr,
+            labname2: "Number Room".tr,
           ),
+          _customDivider(),
+
+             Container(
+              alignment: Alignment.center,
+               child: TextButton(onPressed: (){
+                Get.off(GuestInfoScreen( bookingId: bookingData.id,));
+               }, child: Text("show Guest Details".tr,style: TextStyle(fontSize: 20),)),
+             )
+          
         ],
       ),
     );
@@ -105,7 +117,6 @@ final NetworkController connectivityController =
   Widget _nameBookingHotel({
     required String userName,
     required String hotelname,
-    required String nameRoom,
   }) {
     return Padding(
       padding: const EdgeInsets.all(12.0),
@@ -125,22 +136,74 @@ final NetworkController connectivityController =
                   ),
                 ],
               ),
-              Text(userName),
             ],
           ),
+          Text(userName),
+        ],
+      ),
+    );
+  }
+
+  Widget _DateBookingHotel({
+    required String chechindate,
+    required String chechoutdate,
+  }) {
+    String formatDate(String dateStr) {
+      try {
+        final date = DateTime.parse(dateStr);
+        return DateFormat('yyyy-MM-dd').format(date);
+      } catch (e) {
+        return dateStr;
+      }
+    }
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          _buildInfoColumn("Check_In_Date".tr, formatDate(chechindate)),
+          customVerticalDivider(),
+          _buildInfoColumn("Check_Out_Date".tr, formatDate(chechoutdate)),
+        ],
+      ),
+    );
+  }
+
+  Widget _roomBookingHotel({
+    required String numberRoom,
+    required String amount,
+    required String labname,
+    required String labname2,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          _buildInfoColumn("$labname".tr, amount),
+          customVerticalDivider(),
+          _buildInfoColumn("$labname2".tr, numberRoom),
+        ],
+      ),
+    );
+  }
+
+  Widget _roomNameAndebooed({
+    required String RooName,
+    required String labname,
+    required String labname2,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          _buildInfoColumn("$labname".tr, RooName),
+          customVerticalDivider(),
           Column(
             children: [
-              Row(
-                children: [
-                  const Icon(Icons.bed),
-                  const SizedBox(width: 6),
-                  Text(
-                    nameRoom,
-                    style: const TextStyle(
-                        fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                ],
-              ),
+              Text(labname2),
               Text(
                 statusText(widget.bookingData.status),
                 style:
@@ -148,50 +211,6 @@ final NetworkController connectivityController =
               ),
             ],
           ),
-        ],
-      ),
-    );
-  }
-
-  Widget _DateBookingHotel({
-  required String chechindate,
-  required String chechoutdate,
-}) {
-  String formatDate(String dateStr) {
-    try {
-      final date = DateTime.parse(dateStr);
-      return DateFormat('yyyy-MM-dd').format(date);
-    } catch (e) {
-      return dateStr;
-    }
-  }
-
-  return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        _buildInfoColumn("Check_In_Date".tr, formatDate(chechindate)),
-        customVerticalDivider(),
-        _buildInfoColumn("Check_Out_Date".tr, formatDate(chechoutdate)),
-      ],
-    ),
-  );
-}
-
-
-  Widget _roomBookingHotel({
-    required String numberRoom,
-    required String amount,
-  }) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          _buildInfoColumn("Price".tr, amount),
-          customVerticalDivider(),
-          _buildInfoColumn("Number Room".tr, numberRoom),
         ],
       ),
     );
@@ -214,9 +233,42 @@ final NetworkController connectivityController =
     return Obx(() {
       final services = detailBooking.serviceRoom;
 
+      // if (services.isEmpty) {
+      //   return Text("there is no service here".tr);
+      // }
+
       if (services.isEmpty) {
-        return  Text("there is no service here".tr);
-      }
+        
+                    return Center(
+                      child: Card(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        color: Colors.amber.shade100,
+                        elevation: 4,
+                        child: Padding(
+                          padding: const EdgeInsets.all(24.0),
+                          child: Container(
+                            alignment: Alignment.center,
+                            width: 300,
+                            height: 220,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children:  [
+                                Text(
+                                  "😊",
+                                  style: TextStyle(fontSize: 48),
+                                ),
+                                SizedBox(height: 12),
+                                Text("there is no service here".tr)
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  
+        }
 
       return SingleChildScrollView(
         scrollDirection: Axis.horizontal,
@@ -224,8 +276,10 @@ final NetworkController connectivityController =
           color: Theme.of(context).colorScheme.secondary,
           width: 400,
           child: DataTable(
-            headingRowColor: MaterialStateProperty.all( Colors.grey[700],),
-            columns:  [
+            headingRowColor: MaterialStateProperty.all(
+              Colors.grey[700],
+            ),
+            columns: [
               DataColumn(
                   label: Text('Service'.tr,
                       style: TextStyle(fontWeight: FontWeight.bold))),
@@ -252,39 +306,37 @@ final NetworkController connectivityController =
   // ------------------- Total Amount -------------------
 
   Widget _buildTotalAmount(BuildContext context) {
-  return ElevatedButton(
-    style: ElevatedButton.styleFrom(
-      padding: const EdgeInsets.all(16),
-      backgroundColor: Theme.of(context).colorScheme.primary,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(0),
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        padding: const EdgeInsets.all(16),
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(0),
+        ),
+        elevation: 5,
       ),
-      elevation: 5,
-    ),
-    onPressed: () {
-      
-    },
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-         Text(
-          "Total Amount".tr,
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold,
-),
-        ),
-        Text(
-          "${widget.bookingData.amount}",
-          style: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-            
+      onPressed: () {},
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            "Total Amount".tr,
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
           ),
-        ),
-      ],
-    ),
-  );
-}
-
+          Text(
+            "${widget.bookingData.amount}",
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
   // ------------------- Custom Dividers -------------------
 
@@ -312,17 +364,17 @@ final NetworkController connectivityController =
   // ------------------- Status Helpers -------------------
 
   String statusText(String status) {
-  switch (status) {
-    case "0":
-      return "Pending".tr;
-    case "1":
-      return "Confirmed".tr;
-    case "2":
-      return "Cancelled".tr;
-    default:
-      return "Unknown".tr;
+    switch (status) {
+      case "0":
+        return "Pending".tr;
+      case "1":
+        return "Confirmed".tr;
+      case "2":
+        return "Cancelled".tr;
+      default:
+        return "Unknown".tr;
+    }
   }
-}
 
   Color getStatusColor(String status) {
     switch (status) {

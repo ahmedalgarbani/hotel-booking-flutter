@@ -15,7 +15,7 @@ class GetAllHotels {
   Future<List<HotelsModel>> getAllHotels() async {
     
 
-    final String url = 'http://192.168.60.85:8000/api/hotels/';
+    final String url = 'http://192.168.8.115:8000/api/hotels/';
     print("url ================= $url");
 
     List<HotelsModel> data = await Api().get(url: url);
@@ -25,10 +25,25 @@ class GetAllHotels {
 
 
 class GetAllHotelsSearch {
-  Future<List<HotelsModel>> getAllHotels({required String nameHotelSearch ,required String locationHotelSearch,required int adult_number ,required int room_number ,required String check_in,required String check_out,required String category_type}) async {
+  Future<List<HotelsModel>> getAllHotelsSearch({required String nameHotelSearch ,required String locationHotelSearch,required int adult_number ,required int room_number ,required String check_in,required String check_out,required String category_type}) async {
    
     // print("url ================= $url");
-    final String url = 'http://192.168.60.85:8000/api/hotels/search/?name=$nameHotelSearch&location=$locationHotelSearch&adult_number=$adult_number&room_number=$room_number&check_in=$check_in&check_out=$check_out&category_type=$category_type';
+    final String url = 'http://192.168.8.115:8000/api/hotels/search/?name=$nameHotelSearch&location=$locationHotelSearch&adult_number=$adult_number&room_number=$room_number&check_in=$check_in&check_out=$check_out&category_type=$category_type';
+  List<HotelsModel> data = await Api().get(url:url);
+  print("locationHotelSearch");
+  print(locationHotelSearch);
+  print(adult_number);
+  print("room_number");
+  print(room_number);
+  print("=====================================data $data");
+    return data;
+  }
+}
+class GetAllHotelsSearchlocation {
+  Future<List<HotelsModel>> getAllHotelsSearchlocation({required String nameHotelSearch ,required String locationHotelSearch,required int adult_number ,required int room_number ,required String check_in,required String check_out,required String category_type}) async {
+   
+    // print("url ================= $url");
+    final String url = 'http://192.168.8.115:8000/api/hotels/search/?name=$nameHotelSearch&location=$locationHotelSearch&adult_number=$adult_number&room_number=$room_number&check_in=$check_in&check_out=$check_out&category_type=$category_type';
   List<HotelsModel> data = await Api().get(url:url);
   print("locationHotelSearch");
   print(locationHotelSearch);
@@ -41,7 +56,7 @@ class GetAllHotelsSearch {
 }
 // class GetAllHotelsSearchlocation {
 //   Future<List<HotelsModel>> getAllHotels({required String nameHotelSearch ,required String locationHotelSearch,required int adult_number ,required int room_number ,required String check_in,required String check_out,required String category_type}) async {
-//     final String url = 'http://192.168.60.85:8000/api/hotels/search/?room_number=$room_number&check_in=$check_in&check_out=$check_out&adult_number=$adult_number=&location=$locationHotelSearch&category_type=$category_type';
+//     final String url = 'http://192.168.8.115:8000/api/hotels/search/?room_number=$room_number&check_in=$check_in&check_out=$check_out&adult_number=$adult_number=&location=$locationHotelSearch&category_type=$category_type';
 //   List<HotelsModel> data = await Api().get(url:url);
 //   print("adult_number");
 //   print(adult_number);

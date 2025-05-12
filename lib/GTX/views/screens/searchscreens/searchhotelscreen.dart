@@ -25,223 +25,234 @@ class _SearchhotelscreenState extends State<Searchhotelscreen> {
   String? selectvaluer;
   @override
   Widget build(BuildContext context) {
-    
-      return SafeArea(
-        child: Scaffold(
-          backgroundColor: Theme.of(context).colorScheme.background,
-          body: Column(
-            children: [
-              Stack(
-                children: [
-                  Container(
-                    height: 250,
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.primary,
-                      borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(10),
-                        bottomRight: Radius.circular(10),
-                      ),
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.background,
+        body: Column(
+          children: [
+            Stack(
+              children: [
+                Container(
+                  height: 250,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.primary,
+                    borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(10),
+                      bottomRight: Radius.circular(10),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20.0),
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          child: Container(
-                            padding: EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              color: Theme.of(context).colorScheme.secondary,
-                              border: Border.all(
-                                width: 2,
-                                color: Theme.of(context).colorScheme.primary,
-                              ),
-                              borderRadius: BorderRadius.circular(20),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 20.0),
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Container(
+                          padding: EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).colorScheme.secondary,
+                            border: Border.all(
+                              width: 2,
+                              color: Theme.of(context).colorScheme.primary,
                             ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: Container(
-                                        margin: EdgeInsets.all(5),
-                                        child: Column(
-                                          children: [
-                                            Text("Name".tr,
-                                                style: TextStyle(
-                                                    color: Colors.grey)),
-                                            SizedBox(height: 5),
-                                            inputField(Icons.search, "Enter Name".tr,
-                                                searchController.nameController),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(height: 5),
-                                    Expanded(
-                                      child: Container(
-                                        margin: EdgeInsets.all(5),
-                                        child: Column(
-                                          children: [
-                                            Text("location".tr,
-                                                style: TextStyle(
-                                                    color: Colors.grey)),
-                                            inputField(
-                                                Icons.location_on,
-                                                " Enter destination".tr,
-                                                searchController
-                                                    .locationController),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(height: 15),
-                                  ],
-                                ),
-                                SizedBox(height: 15),
-                                Row(
-                                  children: [
-                                    Expanded(
-                                        child: optionButton(
-                                            Icons.room, "Room".tr, context)),
-                                    SizedBox(width: 10),
-                                    Expanded(
-                                        child: dateButton(Icons.calendar_today,
-                                            "Check-in".tr, context)),
-                                  ],
-                                ),
-                                Obx(() {
-                                  // if (categoriesController.isLoading.value) {
-                                  //   return const Center(
-                                  //       child: CircularProgressIndicator());
-                                  // }
-        
-                                  List<String> categoryNames =
-                                      categoriesController.categoriesList
-                                          .map((cat) => cat.name)
-                                          .toList();
-        
-                                  return Container(
-                                    margin: EdgeInsets.all(20),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(20),
-                                      color: Colors.white,
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.grey.withOpacity(0.2),
-                                          blurRadius: 6,
-                                          offset: Offset(0, 3),
-                                        ),
-                                      ],
-                                    ),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Expanded(
                                     child: Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(20),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            offset: Offset(0.1, 0.1),
-                                            blurRadius: 0.1,
-                                          )
+                                      margin: EdgeInsets.all(5),
+                                      child: Column(
+                                        children: [
+                                          Text("Name".tr,
+                                              style: TextStyle(
+                                                  color: Colors.grey)),
+                                          SizedBox(height: 5),
+                                          inputField(
+                                              Icons.search,
+                                              "Enter Name".tr,
+                                              searchController.nameController),
                                         ],
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .secondary,
                                       ),
-                                      child: DropdownButton<String>(
-                                        focusColor: Theme.of(context)
-                                            .colorScheme
-                                            .secondary,
-                                        isExpanded: true,
-                                        underline: SizedBox(),
-                                        hint: Text("Choose Type Of Hotel".tr),
-                                        alignment: Alignment.center,
-                                        value:
-                                            categoryNames.contains(selectvaluer)
-                                                ? selectvaluer
-                                                : null,
-                                        items: categoriesController.categoriesList
-                                            .map(
-                                                (cat) => DropdownMenuItem<String>(
-                                                      value: cat.name,
-                                                      child: Text(cat.name),
-                                                    ))
-                                            .toList(),
-                                        onChanged: (val) {
-                                          setState(() {
-                                            selectvaluer = val;
-                                            searchController.category_type.value =
-                                                selectvaluer.toString();
-                                            print(selectvaluer);
-                                          });
-                                        },
-                                      ),
-                                    ),
-                                  );
-                                }),
-                                Container(
-                                  width: double.infinity,
-                                  margin: EdgeInsets.all(7),
-                                  child: ElevatedButton(
-                                    onPressed: () {
-                                      searchController.prinsearch();
-                                      searchController.searchHotelss();
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                      padding: EdgeInsets.symmetric(
-                                          vertical: 14, horizontal: 100),
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(50)),
-                                    ),
-                                    child: Text(
-                                      "Search".tr,
                                     ),
                                   ),
+                                  SizedBox(height: 5),
+                                  Expanded(
+                                    child: Container(
+                                      margin: EdgeInsets.all(5),
+                                      child: Column(
+                                        children: [
+                                          Text("location".tr,
+                                              style: TextStyle(
+                                                  color: Colors.grey)),
+                                          inputField(
+                                              Icons.location_on,
+                                              " Enter destination".tr,
+                                              searchController
+                                                  .locationController),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(height: 15),
+                                ],
+                              ),
+                              SizedBox(height: 15),
+                              Row(
+                                children: [
+                                  Expanded(
+                                      child: optionButton(
+                                          Icons.room, "Room".tr, context)),
+                                  SizedBox(width: 10),
+                                  Expanded(
+                                      child: dateButton(Icons.calendar_today,
+                                          "Check-in".tr, context)),
+                                ],
+                              ),
+                              Obx(() {
+                                // if (categoriesController.isLoading.value) {
+                                //   return const Center(
+                                //       child: CircularProgressIndicator());
+                                // }
+
+                                List<String> categoryNames =
+                                    categoriesController.categoriesList
+                                        .map((cat) => cat.name)
+                                        .toList();
+
+                                return Container(
+                                  margin: EdgeInsets.all(20),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20),
+                                    color: Colors.white,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.withOpacity(0.2),
+                                        blurRadius: 6,
+                                        offset: Offset(0, 3),
+                                      ),
+                                    ],
+                                  ),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(20),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          offset: Offset(0.1, 0.1),
+                                          blurRadius: 0.1,
+                                        )
+                                      ],
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .secondary,
+                                    ),
+                                    // child: DropdownButton<String>(
+                                    //   focusColor: Theme.of(context)
+                                    //       .colorScheme
+                                    //       .secondary,
+                                    //   isExpanded: true,
+                                    //   underline: SizedBox(),
+                                    //   hint: Text("Choose Type Of Hotel".tr),
+                                    //   alignment: Alignment.center,
+                                    //   value:
+                                    //       categoryNames.contains(selectvaluer)
+                                    //           ? selectvaluer
+                                    //           : null,
+                                    //   items: categoriesController.categoriesList
+                                    //       .map(
+                                    //           (cat) => DropdownMenuItem<String>(
+                                    //                 value: cat.name,
+                                    //                 child: Text(cat.name),
+                                    //               ))
+                                    //       .toList(),
+                                    //   onChanged: (val) {
+                                    //     setState(() {
+                                    //       selectvaluer = val;
+                                    //       searchController.category_type.value =
+                                    //           selectvaluer.toString();
+                                    //       print(selectvaluer);
+                                    //     });
+                                    //   },
+                                    // ),
+                                  ),
+                                );
+                              }),
+                              Container(
+                                width: double.infinity,
+                                margin: EdgeInsets.all(7),
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    searchController.prinsearch();
+                                    searchController.searchHotelss();
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 14, horizontal: 100),
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(50)),
+                                  ),
+                                  child: Text(
+                                    "Search".tr,
+                                  ),
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-              Expanded(
-                child: Obx(() {
-                  if (searchController.isLoading.value) {
-                    return Center(child: CircularProgressIndicator());
-                  }
-        
-                  if (searchController.hotels.isEmpty) {
-                    return Center(child: Text("No Result For Serach".tr));
-                  }
-        
-                  return ListView.builder(
-                    padding: EdgeInsets.all(10),
-                    itemCount: searchController.hotels.length,
-                    itemBuilder: (context, index) {
-                      final hotel = searchController.hotels[index];
-                      final rooms = searchController.hotels[index].rooms.first;
-                      return cardSearch(
-                        iselect: true,
-                        deletfun: () {},
-                        id: hotel.id,
-                        indexhotel: index,
-                        hotel: hotel,
-                        context: context,
-                        room: rooms,
-                      );
-                    },
-                  );
-                }),
-              ),
-            ],
-          ),
+                ),
+              ],
+            ),
+            Expanded(
+              child: Obx(() {
+                if (searchController.isLoading.value) {
+                  return Center(child: CircularProgressIndicator());
+                }
+
+                if (searchController.hotels.isEmpty) {
+                  return Center(child: Text("No Result For Search".tr));
+                }
+
+                final filteredHotels = searchController.hotels
+                    .where((hotel) => hotel.rooms.isNotEmpty)
+                    .toList();
+
+                if (filteredHotels.isEmpty) {
+                  return Center(
+                      child: Text("No hotels with available rooms".tr));
+                }
+
+                return ListView.builder(
+                  padding: EdgeInsets.all(10),
+                  itemCount: filteredHotels.length,
+                  itemBuilder: (context, index) {
+                    final hotel = filteredHotels[index];
+                    final room = hotel.rooms.first;
+
+                    return cardSearch(
+                      iselect: true,
+                      deletfun: () {},
+                      id: hotel.id,
+                      indexhotel: index,
+                      hotel: hotel,
+                      context: context,
+                      room: room,
+                    );
+                  },
+                );
+              }),
+            ),
+          ],
         ),
-      );
+      ),
+    );
   }
 
   Widget cardSearch({
@@ -352,6 +363,8 @@ class _SearchhotelscreenState extends State<Searchhotelscreen> {
                     builder: (context) => Detailshomescreen(
                       hotel: hotel,
                       id: hotel.id,
+                      searchoteid: hotel.id,
+                      fromSearch: true,
                     ),
                   ),
                 );
@@ -486,24 +499,24 @@ class _SearchhotelscreenState extends State<Searchhotelscreen> {
                       ],
                     ),
                     SizedBox(height: 30),
-                    SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Color.fromARGB(239, 7, 86, 152),
-                          padding: EdgeInsets.symmetric(vertical: 14),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10)),
-                        ),
-                        child: Text(
-                          "Continue".tr,
-                          style: TextStyle(color: Colors.white, fontSize: 16),
-                        ),
-                      ),
-                    ),
+                    // SizedBox(
+                    //   width: double.infinity,
+                    //   child: ElevatedButton(
+                    //     onPressed: () {
+                    //       Navigator.pop(context);
+                    //     },
+                    //     style: ElevatedButton.styleFrom(
+                    //       backgroundColor: Color.fromARGB(239, 7, 86, 152),
+                    //       padding: EdgeInsets.symmetric(vertical: 14),
+                    //       shape: RoundedRectangleBorder(
+                    //           borderRadius: BorderRadius.circular(10)),
+                    //     ),
+                    //     child: Text(
+                    //       "Continue".tr,
+                    //       style: TextStyle(color: Colors.white, fontSize: 16),
+                    //     ),
+                    //   ),
+                    // ),
                   ],
                 ),
               ),

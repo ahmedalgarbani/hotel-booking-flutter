@@ -22,7 +22,7 @@ class AuthService {
 
     try {
       final response = await apiService.postt(
-        url: "http://192.168.60.85:8000/api/token/refresh/",
+        url: "http://192.168.8.115:8000/api/token/refresh/",
         body: {"refresh": refreshToken},
         token: null,  
       );
@@ -76,7 +76,7 @@ class AuthService {
 
     try {
       var response = await apiService.postt(
-        url: "http://192.168.60.85:8000/api/logout/",
+        url: "http://192.168.8.115:8000/api/logout/",
         body: {"refresh_token": refreshToken},
         token: accessToken, 
       );

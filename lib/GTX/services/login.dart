@@ -15,7 +15,7 @@ class LoginService {
 
   
   Map<String, dynamic>? data = await Api().post(
-    url: 'http://192.168.60.85:8000/api/login/',
+    url: 'http://192.168.8.115:8000/api/login/',
     body: {'email': email, 'password': password},
   );
 
@@ -32,6 +32,8 @@ class LoginService {
      Get.find<FavouritesController>().fetchFavourites();
      Get.find<BookingController>().fetchBookings();
      Get.find<Showprofileinfo>().fetchAllUser();
+     Get.find<HotelsController>().fetchHotelsByLocation();
+     Get.find<Hotelinfo>().fetchHotels();
      
      
 

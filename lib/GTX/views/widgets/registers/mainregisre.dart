@@ -168,7 +168,7 @@ class LoginScreen extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          "Don't have an account? ".tr,
+          "Don't have an account?".tr,
           style: TextStyle(
             color: Theme.of(Get.context!)
                 .colorScheme

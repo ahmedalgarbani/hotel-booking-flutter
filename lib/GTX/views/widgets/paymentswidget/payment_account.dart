@@ -12,7 +12,7 @@ Widget exchange(
     required bool isSelected,
     required BuildContext context}) {
   return Container(
-    margin: EdgeInsets.only(left: 9, right: 9),
+    margin: EdgeInsets.only(left: 15, right: 15),
     padding: EdgeInsets.all(8),
     decoration: BoxDecoration(
       color: Theme.of(context).colorScheme.secondary,
@@ -22,20 +22,25 @@ Widget exchange(
         width: 2,
       ),
     ),
-    child: Column(
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        ClipRRect(
-          borderRadius: BorderRadius.circular(10),
-          child: Image.network(
-            image,
-            height: 40,
-            width: 40,
-            fit: BoxFit.cover,
-            errorBuilder: (context, error, stackTrace) =>
-                Icon(Icons.broken_image),
-          ),
+        Column(
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: Image.network(
+                image,
+                height: 40,
+                width: 40,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) =>
+                    Icon(Icons.broken_image),
+              ),
+            ),
+            Text(namemethod),
+          ],
         ),
-        Text(namemethod),
       ],
     ),
   );
@@ -131,24 +136,24 @@ Widget accountInfoImageAndTypePay(BuildContext context) {
                         ),
                       ],
                     ),
-                    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                    child: DropdownButton<String>(
-                      dropdownColor: Theme.of(context).colorScheme.background,
-                      value: paymentTyoe.paymentType.value,
-                      isExpanded: true,
-                      underline: SizedBox(),
-                      items: [
-                        DropdownMenuItem(value: "cash", child: Text("cash".tr)),
-                        DropdownMenuItem(
-                            value: "e_pay", child: Text("e_pay".tr)),
-                      ],
-                      onChanged: (value) {
-                        if (value != null) {
-                          paymentTyoe.paymentType.value = value;
-                          print(paymentTyoe.paymentType.value);
-                        }
-                      },
-                    ),
+                    // padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    // child: DropdownButton<String>(
+                    //   dropdownColor: Theme.of(context).colorScheme.background,
+                    //   value: paymentTyoe.paymentType.value,
+                    //   isExpanded: true,
+                    //   underline: SizedBox(),
+                    //   items: [
+                    //     DropdownMenuItem(value: "cash", child: Text("cash".tr)),
+                    //     DropdownMenuItem(
+                    //         value: "e_pay", child: Text("e_pay".tr)),
+                    //   ],
+                    //   onChanged: (value) {
+                    //     if (value != null) {
+                    //       paymentTyoe.paymentType.value = value;
+                    //       print(paymentTyoe.paymentType.value);
+                    //     }
+                    //   },
+                    // ),
                   ),
                 ),
               ),
@@ -252,46 +257,56 @@ Widget bottomButton(BuildContext context) {
   final ConfirmController bookingController = Get.find<ConfirmController>();
   final gotherallvaraiblepay = Get.find<GotherallvaraiblepayController>();
   final paymentController = Get.find<PaymentController>();
-  return Container(
-    margin: EdgeInsets.all(9),
-    decoration: BoxDecoration(
-      color: Theme.of(context).colorScheme.primary,
-      borderRadius: BorderRadius.circular(10),
-    ),
-    child: TextButton(
-      onPressed: () async {
-        await gotherallvaraiblepay.printallVaribale();
+  return Obx(() => Container(
+        margin: EdgeInsets.all(9),
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.primary,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: TextButton(
+          onPressed: paymentController.isLoading.value
+              ? null
+              : () async {
+                  await gotherallvaraiblepay.printallVaribale();
 
-        if (gotherallvaraiblepay.selectedCurrency.value == null ||
-            gotherallvaraiblepay.selectedCurrency.value == '') {
-          Get.snackbar("خطأ", "يرجى اختيار العملة");
-          return;
-        } else if (bookingController.pickedimage.value == null) {
-          Get.snackbar("خطأ", "يرجى اختيار صورة التحويل البنكي");
-          return;
-        }
-        
+                  if (gotherallvaraiblepay.selectedCurrency.value == null ||
+                      gotherallvaraiblepay.selectedCurrency.value.isEmpty) {
+                    Get.snackbar("خطأ", "يرجى اختيار العملة");
+                    return;
+                  }
 
-        await paymentController.makePayment(
-          bookingId: gotherallvaraiblepay.bookingId.value,
-          paymentMethodId: gotherallvaraiblepay.paymentMethodId.value,
-          paymentSubtotal:
-              double.parse(gotherallvaraiblepay.paymentSubtotal.value),
-          paymentTotalAmount:
-              double.parse(gotherallvaraiblepay.paymentTotalAmount.value),
-          paymentCurrency: gotherallvaraiblepay.selectedCurrency.value,
-          paymentType: gotherallvaraiblepay.paymentType.value,
-          transferImage: bookingController.pickedimage.value!,
-          paymentNote: "booking",
-          paymentDiscount: "0",
-          paymentStatus: 1,
-        );
-      },
-      child: Text("إكمال",
-          style:
-              TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color)),
-    ),
-  );
+                  if (bookingController.pickedimage.value == null) {
+                    Get.snackbar("خطأ", "يرجى اختيار صورة التحويل البنكي");
+                    return;
+                  }
+
+                  await paymentController.makePayment(
+                    bookingId: gotherallvaraiblepay.bookingId.value,
+                    paymentMethodId: gotherallvaraiblepay.paymentMethodId.value,
+                    paymentSubtotal: double.parse(
+                        gotherallvaraiblepay.paymentSubtotal.value),
+                    paymentTotalAmount: double.parse(
+                        gotherallvaraiblepay.paymentTotalAmount.value),
+                    paymentCurrency:
+                        gotherallvaraiblepay.selectedCurrency.value,
+                    paymentType: gotherallvaraiblepay.paymentType.value,
+                    transferImage: bookingController.pickedimage.value!,
+                    paymentNote: "booking",
+                    paymentDiscount: "0",
+                    paymentStatus: 1,
+                  );
+
+                  gotherallvaraiblepay.clearAllVariables();
+                  bookingController.clearAllVariables();
+                },
+          child: paymentController.isLoading.value
+              ? const CircularProgressIndicator(color: Colors.white)
+              : const Text(
+                  "إكمال",
+                  style: TextStyle(color: Colors.white),
+                ),
+        ),
+      ));
 }
 
 Widget bookingHotel({

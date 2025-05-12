@@ -46,4 +46,21 @@ class GotherallvaraiblepayController extends GetxController {
     print("check_out_date ${check_out_date.value}");
     print("check_in_date ${check_in_date.value}");
   }
+
+
+  void clearAllVariables() {
+  bookingId.value = 0;
+  paymentMethodId.value = 0;
+  paymentSubtotal.value = '';
+  paymentTotalAmount.value = '';
+  transferImage.value = null;
+  paymentNote.value = '';
+  paymentDiscount.value = '0';
+  paymentStatus.value = '';
+  selectedCurrency.value = '';
+  paymentType.value = 'cash';
+  check_out_date.value = '';
+  check_in_date.value = '';
+}
+
 }

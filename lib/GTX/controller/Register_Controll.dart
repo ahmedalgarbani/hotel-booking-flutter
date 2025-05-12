@@ -3,7 +3,9 @@ import 'dart:io';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:hotels/GTX/controller/confirm_Contlloer.dart';
+import 'package:hotels/GTX/controller/send_controller.dart';
 import 'package:hotels/GTX/services/addUser.dart';
+import 'package:hotels/GTX/views/screens/CheckCodeScreen/CheckCodeScreen.dart';
 import 'package:image_picker/image_picker.dart';
 
 class RegistrationController extends GetxController {
@@ -15,7 +17,7 @@ class RegistrationController extends GetxController {
   var phoneController = TextEditingController().obs;
   var birthDateController = TextEditingController().obs;
 
-  var gender = 'male'.obs;
+  var gender = 'Male'.obs;
   final ImagePicker _picker = ImagePicker();
   var profileimage = Rxn<File>();
   final ConfirmController confirmController = Get.find<ConfirmController>();
@@ -34,13 +36,13 @@ class RegistrationController extends GetxController {
 
   RegExp emailRegex = RegExp(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$");
   if (!emailRegex.hasMatch(emailController.value.text)) {
-    Get.snackbar("Error", "Please enter a valid email address");
+    Get.snackbar("خطا", "ادخل ايميل صحيح",backgroundColor: Colors.deepOrangeAccent);
     return;
   }
 
   RegExp phoneRegex = RegExp(r"^\d{9,15}$");
   if (!phoneRegex.hasMatch(phoneController.value.text)) {
-    Get.snackbar("Error", "Phone number must be between 9 and 15 digits");
+    Get.snackbar("خطا", "يجب ان يتكون رقم الهاتف من تسعه ارقام");
     return;
   }
 
@@ -56,18 +58,21 @@ class RegistrationController extends GetxController {
       gender: gender.value,
       birth_date: birthDateController.value.text,
     );
+        // await AddUser().sendOTP(phoneController.value.text);
+
 
      _clearFields();
-  Get.snackbar("Success", "User created successfully!".tr,);
+  Get.snackbar("تهانينا", "تم انشاء حساب بالفعل !".tr,backgroundColor: Colors.green);
+ 
 } catch (e) {
   print("Error registering user: $e");
 
   if (e.toString().contains("A user with that username already exists.")) {
     Get.snackbar("Error", "Username already exists, please choose another.",backgroundColor: Colors.deepOrangeAccent);
   } else if (e.toString().contains("Enter a valid email address.")) {
-    Get.snackbar("Error", "Please enter a valid email address.",backgroundColor: Colors.deepOrangeAccent);
+    Get.snackbar("خطا", "ادخل ايميل صحيح لو سمحت.",backgroundColor: Colors.deepOrangeAccent);
   } else {
-    Get.snackbar("Error", "Username already exists, please choose another.",backgroundColor: Colors.deepOrangeAccent);
+    Get.snackbar("تنبيه", "تم استخداستخدام المستخدم بالفعل اختار اخر",backgroundColor: Colors.deepOrangeAccent);
   }
 }
 }

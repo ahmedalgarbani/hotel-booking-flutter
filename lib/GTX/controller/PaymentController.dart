@@ -41,8 +41,9 @@ class PaymentController extends GetxController {
       paymentResult.value = result;
 
       if (result != null) {
+        Get.off(() => PaymentSuccessScreen());
         Get.snackbar("نجاح", "تم الدفع بنجاح",backgroundColor: Colors.green);
-         Get.to(() => PaymentSuccessScreen());
+         
       }
     } catch (e) {
       errorMessage.value = "فشلت عملية الدفع: $e";

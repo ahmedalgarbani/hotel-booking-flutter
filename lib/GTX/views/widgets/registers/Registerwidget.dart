@@ -2,20 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hotels/GTX/controller/Register_Controll.dart';
 import 'package:hotels/GTX/controller/connection_controller.dart';
+import 'package:hotels/GTX/controller/send_controller.dart';
 import 'package:hotels/GTX/views/widgets/registers/mainregisre.dart';
 import 'package:intl/intl.dart';
 
 class Registerwidget extends StatelessWidget {
   final registrationController = Get.find<RegistrationController>();
+  final SendController controllers = Get.find<SendController>();
   final RxString selectedGender = 'Male'.obs;
 
   Registerwidget({super.key});
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
-      appBar: AppBar(title:  Text("Register".tr)),
+      appBar: AppBar(title: Text("Register".tr)),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: GetX<RegistrationController>(
@@ -75,8 +77,11 @@ class Registerwidget extends StatelessWidget {
               SizedBox(
                 height: 15,
               ),
-              _buildTextField(context, "User Name".tr, Icons.person,
-               keyboardType: TextInputType.text,
+              _buildTextField(
+                  context,
+                  "User Name".tr,
+                  Icons.person,
+                  keyboardType: TextInputType.text,
                   registrationController.usernameController.value),
               const SizedBox(height: 10),
               Row(
@@ -86,52 +91,61 @@ class Registerwidget extends StatelessWidget {
                           context,
                           "First Name".tr,
                           Icons.person,
-                                         keyboardType: TextInputType.text,
-
+                          keyboardType: TextInputType.text,
                           registrationController.firstNameController.value)),
                   const SizedBox(width: 10),
                   Expanded(
-                      child: _buildTextField(context, "Last Name".tr, Icons.person,
-                       keyboardType: TextInputType.text,
+                      child: _buildTextField(
+                          context,
+                          "Last Name".tr,
+                          Icons.person,
+                          keyboardType: TextInputType.text,
                           registrationController.lastNameController.value)),
                 ],
               ),
               const SizedBox(height: 10),
-              _buildTextField(context, "Email".tr, Icons.email,
-               keyboardType: TextInputType.emailAddress,
+              _buildTextField(
+                  context,
+                  "Email".tr,
+                  Icons.email,
+                  keyboardType: TextInputType.emailAddress,
                   registrationController.emailController.value),
               const SizedBox(height: 10),
               _buildTextField(context, "Password".tr, Icons.lock,
                   registrationController.passwordController.value,
- keyboardType: TextInputType.visiblePassword,
+                  keyboardType: TextInputType.visiblePassword,
                   obscureText: true),
               const SizedBox(height: 10),
-              _buildTextField(context, "Phone".tr, Icons.phone,
-                        keyboardType: TextInputType.phone,
-
-                  registrationController.phoneController.value, ),
+              _buildTextField(
+                context,
+                "Phone".tr,
+                Icons.phone,
+                keyboardType: TextInputType.phone,
+                registrationController.phoneController.value,
+              ),
               const SizedBox(height: 10),
               _buildBirthDatePicker(context),
               const SizedBox(height: 10),
               _buildGenderSelection(),
               const SizedBox(height: 20),
-            
-                 ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    padding: EdgeInsets.all(15),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  padding: EdgeInsets.all(15),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
                   ),
-                  onPressed: registrationController.register,
-                  child:  Text("Register".tr),
                 ),
-           
+                onPressed: () async {
+                  await registrationController.register();
+                  // await controllers.sendOTP();
+                },
+                child: Text('create Account'.tr),
+              ),
               TextButton(
                 onPressed: () {
                   Get.to(() => LoginScreen());
                 },
-                child:  Text("Already have an account? Login".tr),
+                child: Text("Already have an account? Login".tr),
               ),
             ],
           ),
@@ -141,15 +155,16 @@ class Registerwidget extends StatelessWidget {
   }
 
   Widget _buildTextField(BuildContext context, String hint, IconData icon,
-   
-
       TextEditingController controller,
-      {bool obscureText = false,TextInputType keyboardType = TextInputType.text}) {
+      {bool obscureText = false,
+      TextInputType keyboardType = TextInputType.text}) {
     return TextField(
       controller: controller,
+      onChanged: (value) {
+ controllers.phoneController.value.text = registrationController.phoneController.value.text;
+      },
       obscureText: obscureText,
-              keyboardType: keyboardType, 
-
+      keyboardType: keyboardType,
       decoration: InputDecoration(
         hintText: hint,
         prefixIcon: Icon(icon),
@@ -186,7 +201,7 @@ class Registerwidget extends StatelessWidget {
     return Obx(() => Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-             Text("Select Gender:".tr),
+            Text("Select Gender:".tr),
             Row(
               children: [
                 Radio<String>(
@@ -197,7 +212,7 @@ class Registerwidget extends StatelessWidget {
                     registrationController.gender.value = val;
                   },
                 ),
-                 Text("Male".tr),
+                Text("Male".tr),
                 Radio<String>(
                   value: "Female",
                   groupValue: selectedGender.value,
@@ -206,7 +221,7 @@ class Registerwidget extends StatelessWidget {
                     registrationController.gender.value = val;
                   },
                 ),
-                 Text("Female".tr),
+                Text("Female".tr),
               ],
             )
           ],

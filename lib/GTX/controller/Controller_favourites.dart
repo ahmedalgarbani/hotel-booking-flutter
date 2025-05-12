@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hotels/GTX/Models/favroute_model.dart';
+import 'package:hotels/GTX/Models/show_hotel_model.dart';
 import 'package:hotels/GTX/controller/flashbar.dart';
 import 'package:hotels/GTX/services/favourites_service.dart';
 
 class FavouritesController extends GetxController {
-  var favourites = <favrourHotelsModel>[].obs;
+  var favourites = <HotelsModel>[].obs;
   var isLoading = false.obs;
   var isFavorite = false.obs;
 
@@ -22,7 +23,7 @@ class FavouritesController extends GetxController {
   void fetchFavourites() async {
     try {
       isLoading.value = true;
-      List<favrourHotelsModel> favHotels =
+      List<HotelsModel> favHotels =
           await FavouritesService().getFavourites();
 
       for (var hotel in favHotels) {
@@ -60,7 +61,7 @@ class FavouritesController extends GetxController {
       } else {
         print("wrong to delete of no hotel");
         print("Sccessful");
-        Get.snackbar("successful", "successful Delete Hotel From Favroute!",
+        Get.snackbar("تهانينا", "تم حذف الفندق من المفضله!",
             backgroundColor: Colors.green);
       }
     } catch (e) {

@@ -54,7 +54,7 @@ class PaymentOption {
   });
 
   factory PaymentOption.fromJson(Map<String, dynamic> jsonData) {
-    String baseUrl = "http://192.168.60.85:8000"; 
+    String baseUrl = "http://192.168.8.115:8000"; 
   String logoPath = jsonData['logo'] ?? "";
     print("jsonData['logo']");
     print("jsonData['logo']");

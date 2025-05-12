@@ -27,8 +27,8 @@ class HotelsController extends GetxController {
     try {
       isLoading.value = true;
       errorMessage.value = '';
+String city = await LocationService().getCurrentCity();
 
-      String city = await LocationService().getCurrentCity();
       city = cleanCity(city);
 
       if (city.isEmpty || city == "غير معروف") {
@@ -36,8 +36,9 @@ class HotelsController extends GetxController {
       } else {
         print(" المدينة المحددة: $city");
       }
-     
-      List<HotelsModel> hotels = await GetAllHotelsSearch().getAllHotels(
+
+      List<HotelsModel> hotels =
+          await GetAllHotelsSearchlocation().getAllHotelsSearchlocation(
         nameHotelSearch: "",
         locationHotelSearch: city,
         adult_number: 0,
@@ -55,6 +56,7 @@ class HotelsController extends GetxController {
       }
     } catch (e) {
       errorMessage.value = "wrong when fetch hotel ${e.toString()}";
+      print(errorMessage.value);
       print("Error: ${e.toString()}");
     } finally {
       isLoading.value = false;

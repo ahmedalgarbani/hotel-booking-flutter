@@ -5,7 +5,12 @@ import '../services/show_hotel_services.dart';
 
 class SearchHotelController extends GetxController {
   var hotels = <HotelsModel>[].obs;
+    var reviewHotelSearch = <ReviewModel>[].obs;
+    var Servicehotelssearch = <ModelService>[].obs;
+
+
   var isLoading = false.obs;
+  var isFetching = false.obs;
   var countersroom = 0.obs;
   var counterQuest = 0.obs;
   var check_out_date = "".obs;
@@ -27,12 +32,10 @@ class SearchHotelController extends GetxController {
   void incrementCounterQuests() {
     counterQuest++;
   }
-
   void decrementCounterQuests() {
     if (counterQuest > 1) counterQuest--;
   }
-
-  void prinsearch() {
+void prinsearch() {
     print("countersroom");
     print("category_type");
     print(category_type);
@@ -49,6 +52,55 @@ class SearchHotelController extends GetxController {
     print(nameController.text);
   }
 
+
+
+RxList<modelRoomm> hotelroomsearch = <modelRoomm>[].obs;
+void loadAvailableRoomsById(int hotelId) {
+  isFetching.value = true;
+  final hotel = hotels.firstWhereOrNull((h) => h.id == hotelId);
+
+  if (hotel != null) {
+    hotelroomsearch.value = hotel.rooms;
+    reviewHotelSearch.value = hotel.reviews;
+    Servicehotelssearch.value = hotel.services;
+    print("تم تحميل غرف الفندق: ${hotelroomsearch.length}");
+
+    hotelroomsearch.forEach((room) {
+      print("معرف الغرفة: ${room.id}");
+      print("اسم الغرفة: ${room.name}");
+      print("السعة الافتراضية: ${room.defaultCapacity}");
+      print("السعر الأساسي: ${room.basePrice}");
+      print("----");
+    });
+    reviewHotelSearch.forEach((room) {
+      print("معرف : ${room.id}");
+      print(" الغرفة: ${room.ratingCleanliness}");
+      print(" الافتراضية: ${room.ratingValueForMoney}");
+      print(" الأساسي: ${room.ratingLocation}");
+      print("----");
+    });
+    Servicehotelssearch.forEach((room) {
+      print("معرف : ${room.id}");
+      print(" الغرفة: ${room.name}");
+      print(" الافتراضية: ${room.name}");
+  
+      print("----");
+    });
+
+  } else {
+    hotelroomsearch.clear();
+    reviewHotelSearch.clear();
+    Servicehotelssearch.clear();
+    print("لم يتم العثور على فندق بالمعرّف $hotelId");
+  }
+  isFetching.value = false;
+}
+
+  
+
+  
+  
+
   Future<void> searchHotelss() async {
     print("countersroom");
     print(countersroom);
@@ -64,7 +116,7 @@ class SearchHotelController extends GetxController {
     print(nameController.text);
     try {
       isLoading.value = true;
-      hotels.value = await GetAllHotelsSearch().getAllHotels(
+      hotels.value = await GetAllHotelsSearch().getAllHotelsSearch(
         nameHotelSearch: nameController.text,
         locationHotelSearch: locationController.text,
         adult_number: counterQuest.value,

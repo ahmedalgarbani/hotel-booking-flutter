@@ -10,7 +10,6 @@ Widget hotelCard(
     required String name,
     required HotelsModel hotel,
     required int id,
-    
     required String hotelLocation}) {
   return Card(
     color: Theme.of(context).colorScheme.secondary,
@@ -56,22 +55,12 @@ Widget hotelCard(
                   ],
                 ),
                 SizedBox(height: 4),
-                Row(
-                  children: List.generate(
-                    5,
-                    (index) => Icon(
-                      index < 1 ? Icons.star : Icons.star_border,
-                      size: 16,
-                      color: Colors.amber,
-                    ),
-                  ),
-                ),
                 SizedBox(height: 8),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "price",
+                      "",
                       style:
                           TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
@@ -79,9 +68,9 @@ Widget hotelCard(
                       onPressed: () {
                         Get.to(
                           Detailshomescreen(
-                            
                             hotel: hotel,
                             id: hotel.id,
+                            searchoteid: hotel.id,
                           ),
                         );
                       },
@@ -111,19 +100,19 @@ Widget titleNearby({required BuildContext context}) {
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
         ),
         TextButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => NearbyHotelsScreen(),
-                ),
-              );
-            }, child: Text(
-          "See All :".tr,
-          style: TextStyle(color: Colors.grey),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => NearbyHotelsScreen(),
+              ),
+            );
+          },
+          child: Text(
+            "See All :".tr,
+            style: TextStyle(color: Colors.grey),
+          ),
         ),
-        ),
-        
       ],
     ),
   );

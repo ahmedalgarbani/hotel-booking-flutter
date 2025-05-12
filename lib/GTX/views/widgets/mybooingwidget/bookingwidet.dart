@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hotels/GTX/Models/BookingModel.dart';
+import 'package:hotels/GTX/views/screens/AddGuestScreen/AddGuestScreen.dart';
 import 'package:hotels/GTX/views/screens/BookingDetailsScreen/BookingDetailsScreen.dart';
 import 'package:intl/intl.dart';
 
@@ -32,10 +33,11 @@ Widget bookingHotel({
       borderRadius: BorderRadius.circular(20),
       boxShadow: [
         BoxShadow(
-          color: Colors.grey.withOpacity(0.1),
-          blurRadius: 10,
-          spreadRadius: 0,
-          offset: const Offset(0, 4),
+          color: Colors.grey.withOpacity(0.2),
+          blurRadius: 0.5,
+          spreadRadius: 1,
+          blurStyle: BlurStyle.solid,
+          offset: const Offset(0.4, .04),
         ),
       ],
     ),
@@ -108,7 +110,7 @@ Widget bookingHotel({
                 const SizedBox(height: 8),
                 Row(
                   children: [
-                    const Icon(Icons.location_on, size: 16, color: Colors.grey),
+                    const Icon(Icons.bed, size: 16, color: Colors.grey),
                     const SizedBox(width: 4),
                     Expanded(
                       child: Text(
@@ -121,6 +123,18 @@ Widget bookingHotel({
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
+                    (status == "1")
+                        ? ElevatedButton(
+                            onPressed: () {
+                              Get.to(Bookingdetailsscreen(
+                                id: id,
+                                bookingData: bookingData,
+                                indexBooking: indexBooking,
+                              ));
+                            },
+                            child: Text("Details".tr),
+                          )
+                        : Text(""),
                   ],
                 ),
                 const SizedBox(height: 16),
@@ -151,6 +165,7 @@ Widget _buildInfoRow(
     required BookingModel bookingData,
     required BuildContext context}) {
   return Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
       Icon(icon, size: 16, color: Colors.grey),
       const SizedBox(width: 4),
@@ -174,17 +189,23 @@ Widget _buildInfoRow(
           overflow: TextOverflow.ellipsis,
         ),
       ),
-      ElevatedButton(
-          onPressed: () {
-            Get.to(Bookingdetailsscreen(
-              id: id,
-              bookingData: bookingData,
-              indexBooking: indexBooking,
-            ));
-          },
-          child: Text(
-            "Show Details".tr,
-          ))
+      (value == "1")
+          ? TextButton(
+              onPressed: () {
+                Get.to(() => AddGuestScreen(booking_id: id));
+              },
+              child: Text("إضافة ضيف"),
+            )
+          : ElevatedButton(
+              onPressed: () {
+                Get.to(Bookingdetailsscreen(
+                  id: id,
+                  bookingData: bookingData,
+                  indexBooking: indexBooking,
+                ));
+              },
+              child: Text("Details".tr),
+            )
     ],
   );
 }

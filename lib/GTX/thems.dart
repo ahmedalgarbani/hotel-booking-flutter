@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 ThemeData lightMode = ThemeData(
   brightness: Brightness.light,
   colorScheme: ColorScheme.light(
-    background: const Color.fromRGBO(240, 240, 240, 1),
+    background:  Colors.white,
     primary: Color.fromARGB(255, 39, 63, 70),
     secondary: Colors.white,
   ),
@@ -42,7 +42,7 @@ ThemeData lightMode = ThemeData(
   ),
   focusedBorder: OutlineInputBorder(
     borderRadius: BorderRadius.circular(25),
-    borderSide: BorderSide(color: Color.fromARGB(255, 39, 63, 70), width: 2),
+    borderSide: BorderSide(color: Color.fromARGB(255, 39, 63, 70), width: 1),
   ),
 ),
 

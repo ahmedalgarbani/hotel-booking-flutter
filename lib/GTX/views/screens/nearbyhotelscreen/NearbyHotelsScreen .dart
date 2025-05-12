@@ -14,7 +14,7 @@ class NearbyHotelsScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
-        title: const Text('Nearby Hotels'),
+        title:  Text('Nearby Hotels'.tr),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -22,7 +22,7 @@ class NearbyHotelsScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Hotels Near You',
+              'Hotels Near You'.tr,
               style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                     color: Theme.of(context).colorScheme.primary,
@@ -30,7 +30,7 @@ class NearbyHotelsScreen extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              'Discover great stays in your area',
+              'Discover great stays in your area'.tr,
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                     color: Theme.of(context)
                         .colorScheme
@@ -84,7 +84,7 @@ class NearbyHotelsScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 16),
                         Text(
-                          'No hotels found in your area',
+                          'No hotels found in your area'.tr,
                           style:
                               Theme.of(context).textTheme.titleLarge?.copyWith(
                                     color: Theme.of(context)
@@ -191,11 +191,12 @@ class NearbyHotelsScreen extends StatelessWidget {
                             Detailshomescreen(
                               hotel: hotel,
                               id: hotel.id,
+                              searchoteid: hotel.id,
                             ),
                           );
                         },
                         style: ElevatedButton.styleFrom(),
-                        child: Text("احجز الآن"),
+                        child: Text("Booking Now".tr),
                       )
                     ],
                   ),
