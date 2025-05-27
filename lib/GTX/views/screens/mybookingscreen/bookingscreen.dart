@@ -64,8 +64,9 @@ class _BookingscreenState extends State<Bookingscreen> {
                 borderRadius: BorderRadius.circular(20),
               ),
               child: TabBar(
-                labelColor: Colors.white,
+                 labelColor: Colors.white,
                 unselectedLabelColor: Colors.black,
+                
                 indicator: BoxDecoration(
                   color: Theme.of(context).colorScheme.primary,
                   borderRadius: BorderRadius.all(Radius.circular(20)),
